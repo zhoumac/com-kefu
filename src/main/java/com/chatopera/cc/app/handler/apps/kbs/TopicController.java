@@ -34,8 +34,6 @@ import com.chatopera.cc.app.basic.MainContext;
 import com.chatopera.cc.app.basic.MainUtils;
 import com.chatopera.cc.util.Menu;
 import com.chatopera.cc.exchange.DataExchangeInterface;
-import com.chatopera.cc.concurrent.dsdata.DSData;
-import com.chatopera.cc.concurrent.dsdata.ExcelImportProecess;
 import com.chatopera.cc.concurrent.dsdata.export.ExcelExporterProcess;
 import com.chatopera.cc.app.persistence.repository.SysDicRepository;
 import com.chatopera.cc.app.persistence.repository.TopicItemRepository;
@@ -56,13 +54,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.chatopera.cc.concurrent.dsdata.DSDataEvent;
 import com.chatopera.cc.concurrent.dsdata.process.TopicProcess;
 import com.chatopera.cc.app.persistence.es.TopicRepository;
 import com.chatopera.cc.app.persistence.repository.AreaTypeRepository;
 import com.chatopera.cc.app.persistence.repository.KnowledgeTypeRepository;
 import com.chatopera.cc.app.persistence.repository.MetadataRepository;
-import com.chatopera.cc.app.persistence.repository.ReporterRepository;
 import com.chatopera.cc.app.handler.Handler;
 import com.chatopera.cc.app.model.MetadataTable;
 import com.chatopera.cc.app.model.UKeFuDic;
@@ -96,10 +92,6 @@ public class TopicController extends Handler{
 	
 	@Autowired
 	private TopicItemRepository topicItemRes ;
-	
-	@Autowired
-	private ReporterRepository reporterRes ;
-	
     
     @RequestMapping("/topic")
     @Menu(type = "xiaoe" , subtype = "knowledge")
@@ -365,35 +357,7 @@ public class TopicController extends Handler{
         return request(super.createRequestPageTempletResponse("/apps/business/topic/imp"));
     }
     
-    @RequestMapping("/topic/impsave")
-    @Menu(type = "xiaoe" , subtype = "knowledge")
-    public ModelAndView impsave(ModelMap map , HttpServletRequest request , @RequestParam(value = "cusfile", required = false) MultipartFile cusfile , @Valid String type, @Valid String aiid) throws IOException {
-    	DSDataEvent event = new DSDataEvent();
-    	String fileName = "xiaoe/"+ MainUtils.getUUID()+cusfile.getOriginalFilename().substring(cusfile.getOriginalFilename().lastIndexOf(".")) ;
-    	File excelFile = new File(path , fileName) ;
-    	if(!excelFile.getParentFile().exists()){
-    		excelFile.getParentFile().mkdirs() ;
-    	}
-    	MetadataTable table = metadataRes.findByTablename("uk_xiaoe_topic") ;
-    	if(table!=null){
-	    	FileUtils.writeByteArrayToFile(new File(path , fileName), cusfile.getBytes());
-	    	event.setDSData(new DSData(table,excelFile , cusfile.getContentType(), super.getUser(request)));
-	    	event.getDSData().setClazz(Topic.class);
-	    	event.setOrgi(super.getOrgi(request));
-	    	if(!StringUtils.isBlank(type)){
-	    		event.getValues().put("cate", type) ;
-	    	}else{
-	    		event.getValues().put("cate", MainContext.DEFAULT_TYPE) ;
-	    	}
-	    	event.getValues().put("creater", super.getUser(request).getId()) ;
-	    	event.getDSData().setProcess(new TopicProcess(topicRes));
-	    	reporterRes.save(event.getDSData().getReport()) ;
-	    	new ExcelImportProecess(event).process() ;		//启动导入任务
-    	}
-    	
-    	return request(super.createRequestPageTempletResponse("redirect:/apps/topic.html?type="+type));
-    }
-    
+
     @RequestMapping("/topic/batdelete")
     @Menu(type = "xiaoe" , subtype = "knowledge")
     public ModelAndView batdelete(ModelMap map , HttpServletRequest request , HttpServletResponse response , @Valid String[] ids ,@Valid String type, @Valid String aiid) throws IOException {

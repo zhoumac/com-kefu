@@ -17,7 +17,6 @@
 package com.chatopera.cc.app.config;
 
 import com.chatopera.cc.concurrent.multiupdate.MultiUpdateEventFactory;
-import com.chatopera.cc.concurrent.multiupdate.MultiUpdateEventHandler;
 import com.chatopera.cc.concurrent.user.UserDataEvent;
 import com.chatopera.cc.concurrent.user.UserDataEventFactory;
 import com.chatopera.cc.concurrent.user.UserEventHandler;
@@ -44,7 +43,7 @@ public class DisruptorConfigure {
 		return disruptor;
 	}
 
-	@SuppressWarnings({"unchecked", "deprecation"})
+	/*@SuppressWarnings({"unchecked", "deprecation"})
 	@Bean(name = "multiupdate")
 	public Disruptor<UserDataEvent> multiupdate() {
 		Executor executor = Executors.newCachedThreadPool();
@@ -54,7 +53,7 @@ public class DisruptorConfigure {
 		disruptor.setDefaultExceptionHandler(new UKeFuExceptionHandler());
 		disruptor.start();
 		return disruptor;
-	}
+	}*/
 
 //	@SuppressWarnings({"unchecked", "deprecation"})
 //	@Bean(name = "chatbot")

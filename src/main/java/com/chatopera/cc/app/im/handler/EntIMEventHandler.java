@@ -13,7 +13,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *//*
+
 package com.chatopera.cc.app.im.handler;
 
 import java.util.List;
@@ -31,10 +32,8 @@ import com.corundumstudio.socketio.annotation.OnDisconnect;
 import com.corundumstudio.socketio.annotation.OnEvent;
 import com.chatopera.cc.app.im.client.NettyClients;
 import com.chatopera.cc.app.persistence.repository.ChatMessageRepository;
-import com.chatopera.cc.app.persistence.repository.IMGroupUserRepository;
 import com.chatopera.cc.app.persistence.repository.RecentUserRepository;
 import com.chatopera.cc.app.im.message.ChatMessage;
-import com.chatopera.cc.app.model.IMGroupUser;
 import com.chatopera.cc.app.model.MessageOutContent;
 import com.chatopera.cc.app.model.RecentUser;
 import com.chatopera.cc.app.model.User;
@@ -174,4 +173,4 @@ public class EntIMEventHandler
 			}
 		}
     } 
-}  
+}  */

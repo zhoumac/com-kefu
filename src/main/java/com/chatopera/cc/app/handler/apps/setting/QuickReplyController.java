@@ -16,7 +16,6 @@
  */
 package com.chatopera.cc.app.handler.apps.setting;
 
-import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,16 +32,11 @@ import com.chatopera.cc.app.basic.MainContext;
 import com.chatopera.cc.app.basic.MainUtils;
 import com.chatopera.cc.app.persistence.repository.*;
 import com.chatopera.cc.util.Menu;
-import com.chatopera.cc.concurrent.dsdata.DSData;
-import com.chatopera.cc.concurrent.dsdata.DSDataEvent;
-import com.chatopera.cc.concurrent.dsdata.ExcelImportProecess;
 import com.chatopera.cc.concurrent.dsdata.export.ExcelExporterProcess;
-import com.chatopera.cc.concurrent.dsdata.process.QuickReplyProcess;
 import com.chatopera.cc.app.handler.Handler;
 import com.chatopera.cc.app.model.MetadataTable;
 import com.chatopera.cc.app.model.QuickReply;
 import com.chatopera.cc.app.model.QuickType;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,8 +45,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -67,9 +59,7 @@ public class QuickReplyController extends Handler {
 	
 	@Autowired
 	private MetadataRepository metadataRes ;
-	
-	@Autowired
-	private ReporterRepository reporterRes ;
+
 	
 	@Value("${web.upload-path}")
     private String path;
@@ -232,35 +222,7 @@ public class QuickReplyController extends Handler {
         return request(super.createRequestPageTempletResponse("/apps/setting/quickreply/imp"));
     }
     
-    @RequestMapping("/impsave")
-    @Menu(type = "setting" , subtype = "quickreplyimpsave")
-    public ModelAndView impsave(ModelMap map , HttpServletRequest request , @RequestParam(value = "cusfile", required = false) MultipartFile cusfile , @Valid String type) throws IOException {
-    	DSDataEvent event = new DSDataEvent();
-    	String fileName = "quickreply/"+ MainUtils.getUUID()+cusfile.getOriginalFilename().substring(cusfile.getOriginalFilename().lastIndexOf(".")) ;
-    	File excelFile = new File(path , fileName) ;
-    	if(!excelFile.getParentFile().exists()){
-    		excelFile.getParentFile().mkdirs() ;
-    	}
-    	MetadataTable table = metadataRes.findByTablename("uk_quickreply") ;
-    	if(table!=null){
-	    	FileUtils.writeByteArrayToFile(new File(path , fileName), cusfile.getBytes());
-	    	event.setDSData(new DSData(table,excelFile , cusfile.getContentType(), super.getUser(request)));
-	    	event.getDSData().setClazz(QuickReply.class);
-	    	event.setOrgi(super.getOrgi(request));
-	    	if(!StringUtils.isBlank(type)){
-	    		event.getValues().put("cate", type) ;
-	    	}else{
-	    		event.getValues().put("cate", MainContext.DEFAULT_TYPE) ;
-	    	}
-	    	event.getValues().put("type", MainContext.QuickTypeEnum.PUB.toString()) ;
-	    	event.getValues().put("creater", super.getUser(request).getId()) ;
-	    	event.getDSData().setProcess(new QuickReplyProcess(quickReplyRes));
-	    	reporterRes.save(event.getDSData().getReport()) ;
-	    	new ExcelImportProecess(event).process() ;		//启动导入任务
-    	}
-    	
-    	return request(super.createRequestPageTempletResponse("redirect:/setting/quickreply/index.html"+(!StringUtils.isBlank(type)? "?typeid="+type:"")));
-    }
+
     
     @RequestMapping("/batdelete")
     @Menu(type = "setting" , subtype = "quickreplybatdelete")

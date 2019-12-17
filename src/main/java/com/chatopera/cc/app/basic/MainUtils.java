@@ -25,7 +25,6 @@ import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
 import com.chatopera.cc.app.cache.CacheHelper;
 import com.chatopera.cc.app.model.AdType;
-import com.chatopera.cc.app.model.JobDetail;
 import com.chatopera.cc.app.model.JobTask;
 import com.chatopera.cc.app.model.Secret;
 import com.chatopera.cc.app.model.SysDic;
@@ -1372,19 +1371,7 @@ public class MainUtils {
 		return strb.toString();
 	}
 
-	public static Date updateTaskNextFireTime(JobDetail jobDetail) throws Exception {
-		Date nextFireDate = new Date();
-		Date date = new Date();
-		if (jobDetail != null && jobDetail.getCronexp() != null && jobDetail.getCronexp().length() > 0) {
-			try {
-				nextFireDate = (CronTools.getFinalFireTime(jobDetail.getCronexp(), jobDetail.getNextfiretime() != null ? jobDetail.getNextfiretime() : date));
-			} catch (ParseException e) {
-				nextFireDate = new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24);    //一旦任务的 Cron表达式错误，将下次执行时间自动设置为一天后，避免出现任务永远无法终止的情况
-				e.printStackTrace();
-			}
-		}
-		return nextFireDate;
-	}
+
 
 	/**
 	 * @param dialNum

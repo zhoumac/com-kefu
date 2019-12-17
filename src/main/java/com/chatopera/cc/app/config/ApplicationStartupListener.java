@@ -13,12 +13,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *//*
+
 package com.chatopera.cc.app.config;
 
 import com.chatopera.cc.app.basic.MainContext;
-import com.chatopera.cc.app.model.Favorites;
-import com.chatopera.cc.app.model.WorkOrders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -47,4 +46,4 @@ public class ApplicationStartupListener implements ApplicationListener<ContextRe
         }
     	MainContext.setTemplet(elasticSearchTemplate);
     }
-}
+}*/

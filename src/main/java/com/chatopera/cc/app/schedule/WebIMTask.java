@@ -53,9 +53,6 @@ public class WebIMTask {
     private OnlineUserRepository onlineUserRes;
 
     @Autowired
-    private JobDetailRepository jobDetailRes;
-
-    @Autowired
     private TaskExecutor webimTaskExecutor;
 
     @Scheduled(fixedDelay = 5000) // 处理超时消息，每5秒执行一次

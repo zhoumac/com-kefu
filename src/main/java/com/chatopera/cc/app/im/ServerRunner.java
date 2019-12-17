@@ -18,7 +18,7 @@ package com.chatopera.cc.app.im;
 
 import com.chatopera.cc.app.basic.MainContext;
 import com.chatopera.cc.app.im.handler.AgentEventHandler;
-import com.chatopera.cc.app.im.handler.EntIMEventHandler;
+//import com.chatopera.cc.app.im.handler.EntIMEventHandler;
 import com.chatopera.cc.app.im.handler.IMEventHandler;
 import com.corundumstudio.socketio.SocketIONamespace;
 import com.corundumstudio.socketio.SocketIOServer;
@@ -78,11 +78,11 @@ public class ServerRunner implements CommandLineRunner {
         return agentSocketIONameSpace;
     }
 
-    @Bean(name = "entimNamespace")
+ /*   @Bean(name = "entimNamespace")
     public SocketIONamespace getEntIMSocketIONameSpace(SocketIOServer server) {
         entIMSocketIONameSpace.addListeners(new EntIMEventHandler(server));
         return entIMSocketIONameSpace;
-    }
+    }*/
 
     @Bean(name = "chatbotNamespace")
     public SocketIONamespace getChatbotSocketIONameSpace(SocketIOServer server) {

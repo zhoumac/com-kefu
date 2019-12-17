@@ -32,17 +32,12 @@ import com.chatopera.cc.app.persistence.repository.UserRoleRepository;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 
-import com.chatopera.cc.app.cache.CacheHelper;
 import com.chatopera.cc.app.persistence.repository.UKefuCallOutRoleRepository;
-import com.chatopera.cc.app.persistence.repository.ExtentionRepository;
 import com.chatopera.cc.app.persistence.repository.FormFilterRepository;
-import com.chatopera.cc.app.persistence.repository.JobDetailRepository;
 import com.chatopera.cc.app.persistence.repository.OrganRepository;
 
 import com.chatopera.cc.app.model.UKefuCallOutRole;
-import com.chatopera.cc.app.model.Extention;
 import com.chatopera.cc.app.model.FormFilter;
-import com.chatopera.cc.app.model.JobDetail;
 import com.chatopera.cc.app.model.Organ;
 import com.chatopera.cc.app.model.User;
 import com.chatopera.cc.app.model.UserRole;
@@ -138,46 +133,7 @@ public class CallCenterUtils {
 		}
 		return organList ;
 	}
-	/**
-	 * 我的部门以及授权给我的部门 - 批次
-	 * @param batchRes
-	 * @param userRoleRes
-	 * @param callOutRoleRes
-	 * @param user
-	 * @return
-	 */
-	public static List<JobDetail> getBatchList(JobDetailRepository batchRes, UserRoleRepository userRoleRes , UKefuCallOutRoleRepository callOutRoleRes, final User user){
-		
-		//final List<String> organList = CallCenterUtils.getAuthOrgan(userRoleRes, callOutRoleRes, user);
-		
-		final List<String> organList = CallCenterUtils.getExistOrgan(user);
-		
-		List<JobDetail> batchList = batchRes.findAll(new Specification<JobDetail>(){
-			@Override
-			public Predicate toPredicate(Root<JobDetail> root, CriteriaQuery<?> query,
-					CriteriaBuilder cb) {
-				List<Predicate> list = new ArrayList<Predicate>();  
-				In<Object> in = cb.in(root.get("organ"));
-				
-				list.add(cb.equal(root.get("orgi").as(String.class), user.getOrgi()));
-				list.add(cb.equal(root.get("tasktype").as(String.class), MainContext.TaskType.BATCH.toString()));
-				
-				if(organList.size() > 0){
-					
-					for(String id : organList){
-						in.value(id) ;
-					}
-				}else{
-					in.value(MainContext.UKEFU_SYSTEM_NO_DAT) ;
-				}
-				list.add(in) ;
-				
-				Predicate[] p = new Predicate[list.size()];  
-				return cb.and(list.toArray(p));   
-			}});
-		
-		return batchList;
-	}
+
 	/**
 	 * 我的部门以及授权给我的部门 - 筛选表单
 	 * @param filterRes
@@ -218,46 +174,7 @@ public class CallCenterUtils {
 		return formFilterList;
 	}
 	
-	/**
-	 * 我的部门以及授权给我的部门 - 活动
-	 * @param batchRes
-	 * @param userRoleRes
-	 * @param callOutRoleRes
-	 * @param user
-	 * @return
-	 */
-	public static List<JobDetail> getActivityList(JobDetailRepository batchRes, UserRoleRepository userRoleRes , UKefuCallOutRoleRepository callOutRoleRes, final User user){
-		
-		//final List<String> organList = CallCenterUtils.getAuthOrgan(userRoleRes, callOutRoleRes, user);
-		
-		final List<String> organList = CallCenterUtils.getExistOrgan(user);
-		
-		List<JobDetail> activityList = batchRes.findAll(new Specification<JobDetail>(){
-			@Override
-			public Predicate toPredicate(Root<JobDetail> root, CriteriaQuery<?> query,
-					CriteriaBuilder cb) {
-				List<Predicate> list = new ArrayList<Predicate>();  
-				In<Object> in = cb.in(root.get("organ"));
-				
-				list.add(cb.equal(root.get("orgi").as(String.class), user.getOrgi()));
-				list.add(cb.equal(root.get("tasktype").as(String.class), MainContext.TaskType.ACTIVE.toString()));
-				
-				if(organList.size() > 0){
-					
-					for(String id : organList){
-						in.value(id) ;
-					}
-				}else{
-					in.value(MainContext.UKEFU_SYSTEM_NO_DAT) ;
-				}
-				list.add(in) ;
-				
-				Predicate[] p = new Predicate[list.size()];  
-				return cb.and(list.toArray(p));   
-			}});
-		
-		return activityList;
-	}
+
 	/**
 	 * 查询条件，下拉信息返回
 	 * @param map

@@ -13,7 +13,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *//*
+
 
 package com.chatopera.cc.app.handler.apps.customer;
 
@@ -317,9 +318,11 @@ public class CustomerController extends Handler{
 	    	event.getDSData().setClazz(EntCustomer.class);
 	    	event.getDSData().setProcess(new EntCustomerProcess(entCustomerRes));
 	    	event.setOrgi(super.getOrgi(request));
-	    	/*if(!StringUtils.isBlank(ekind)){
+	    	*/
+/*if(!StringUtils.isBlank(ekind)){
 	    		exchange.getValues().put("ekind", ekind) ;
-	    	}*/
+	    	}*//*
+
 	    	event.getValues().put("creater", super.getUser(request).getId()) ;
 	    	reporterRes.save(event.getDSData().getReport()) ;
 	    	new ExcelImportProecess(event).process() ;		//启动导入任务
@@ -404,4 +407,4 @@ public class CustomerController extends Handler{
     	
         return ;
     }
-}
+}*/

@@ -28,7 +28,7 @@ public class JpaInterceptor implements StatementInspector {
     @SneakyThrows
     @Override
     public String inspect(String sql) {
-        System.out.println("进入拦截器" + sql);
+        //System.out.println("进入拦截器" + sql);
         List<String> tableNames = JpaInterceptor.getTableNames(sql);
         if(!CollectionUtils.isEmpty(tableNames)){
             JpaInterceptor.useTables.addAll(tableNames);
