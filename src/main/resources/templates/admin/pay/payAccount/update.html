@@ -1,0 +1,103 @@
+<div class="uk-layui-form">
+    <form class="layui-form uk-form"
+          action="${URL}/doUpdate.html"
+          method="post">
+        <input name="id"
+               value="${entity.id}"
+               hidden/>
+        <div class="layui-form-item">
+            <label class="layui-form-label">支付方式：</label>
+            <div class="layui-input-inline">
+                <select name="payFuctionId"
+                        lay-verify="required">
+                    <option value="">请选择一个支付方式</option>
+                    <#if UkPayMsgEntityList??>
+                        <#list UkPayMsgEntityList as UkPayMsgEntity>
+                            <option value="${UkPayMsgEntity.id}"
+                                    <#if UkPayMsgEntity.id == entity.payFuctionId>selected="selected"</#if>>${UkPayMsgEntity.name}</option>
+                        </#list>
+                    </#if>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">权重:</label>
+            <div class="layui-input-inline">
+                <input type="text"
+                       name="weights"
+                       required
+                       lay-verify="required|number"
+                       placeholder="请输入权重"
+                       autocomplete="off"
+                       class="layui-input"
+                       value="${entity.weights}">
+            </div>
+            <div class="layui-form-mid layui-word-aux">(数值越大权重越高)</div>
+        </div>
+        <#if entity.type=="1">
+            <div class="layui-form-item">
+                <label class="layui-form-label">账号：</label>
+                <div class="layui-input-inline">
+                    <input type="text"
+                           name="account"
+                           required
+                           lay-verify="required"
+                           placeholder="请输入账号"
+                           autocomplete="off"
+                           class="layui-input"
+                           value="${entity.account}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">账户名：</label>
+                <div class="layui-input-inline">
+                    <input type="text"
+                           id="accountInput"
+                           name="accountUsername"
+                           required
+                           lay-verify="required"
+                           placeholder="请输入账户名"
+                           autocomplete="off"
+                           value="${entity.accountUsername}"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">账户银行：</label>
+                <div class="layui-input-inline">
+                    <input type="text"
+                           id="accountInput"
+                           name="accountBank"
+                           required
+                           lay-verify="required"
+                           placeholder="请输入账户银行"
+                           autocomplete="off"
+                           value="${entity.accountBank}"
+                           class="layui-input">
+                </div>
+            </div>
+        </#if>
+        <#if entity.type=="2">
+            <#include "/admin/pay/payAccount/uploadQRCode.html">
+        </#if>
+        <div class="layui-form-button">
+            <div class="layui-button-block">
+                <button class="layui-btn"
+                        lay-submit
+                        lay-filter="formDemo">立即提交
+                </button>
+                <button type="reset"
+                        class="layui-btn layui-btn-primary">重置
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+	//Demo
+	layui.use('form', function () {
+		var form = layui.form();
+		form.render(); //更新全部
+	});
+</script>

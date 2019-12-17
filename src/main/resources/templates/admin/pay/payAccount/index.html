@@ -1,0 +1,150 @@
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="site-h1"
+            style="background-color:#FFFFFF;">
+            ${MODULE_NAME}列表<#if entityList??>（${entityList.totalElements!''}）</#if>
+            <span style="float:right;">
+				<button class="layui-btn layui-btn-small green"
+                        href="${URL}/goAdd.html?type=1"
+                        data-toggle="ajax"
+                        data-width="700"
+                        data-height="500"
+                        data-title="创建${MODULE_NAME}">
+					创建${MODULE_NAME}
+				</button>
+				<button class="layui-btn layui-btn-small green"
+                        href="${URL}/goAdd.html?type=2"
+                        data-toggle="ajax"
+                        data-width="700"
+                        data-height="500"
+                        data-title="创建支付二维码">
+					创建支付二维码
+				</button>
+			</span>
+        </h1>
+        <div class="row"
+             style="padding:5px;">
+            <div class="col-lg-12">
+                <table class="layui-table"
+                       lay-skin="line">
+                    <colgroup>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>支付方式</th>
+                        <th>类型</th>
+                        <th>账号或二维码路径</th>
+                        <th>账户名</th>
+                        <th>账户银行</th>
+                        <th>权重(数值越大权重越高)</th>
+                        <th>状态</th>
+                        <th>创建人</th>
+                        <th>创建时间</th>
+                        <th>更新人</th>
+                        <th>更新时间</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <#if entityList?? && entityList.content??>
+                        <#list entityList.content as entity>
+                            <tr>
+                                <td>${entity.payFuctionName!''}</td>
+                                <td>${(entity.type=='1')?string('账号','二维码')}</td>
+                                <td>${entity.account!''}</td>
+                                <td>${entity.accountUsername!''}</td>
+                                <td>${entity.accountBank!''}</td>
+                                <td>${entity.weights!''}</td>
+                                <#if entity.status=='1'>
+                                    <td>正常</td>
+                                <#elseif entity.status=='0'>
+                                    <td>已删除</td>
+                                <#elseif entity.status=='2'>
+                                    <td>已锁定</td>
+                                </#if>
+                                <td>${entity.createUser!''}</td>
+                                <td>${entity.createTime!''}</td>
+                                <td>${entity.updateUser!''}</td>
+                                <td>${entity.updateTime!''}</td>
+                                <td style="white-space:nowrap;"
+                                    nowrap="nowrap">
+                                    <a href="${URL}/goUpdate.html?id=${entity.id!''}"
+                                       data-toggle="ajax"
+                                       data-width="700"
+                                       data-height="500}"
+                                       data-title="编辑${MODULE_NAME}">
+                                        <i class="layui-icon">&#xe642;</i>
+                                        编辑
+                                    </a>
+                                    <#if user?? && user.usertype=='0'>
+                                        <#if entity.status=='1'>
+                                            <a href="${URL}/doLock.html?id=${entity.id!''}"
+                                               style="margin-left:10px;"
+                                               data-toggle="tip"
+                                               data-title="请确认是否锁定该${MODULE_NAME}？">
+                                                锁定
+                                            </a>
+                                        <#elseif entity.status=='2'>
+                                            <a href="${URL}/doUnlock.html?id=${entity.id!''}"
+                                               style="margin-left:10px;"
+                                               data-toggle="tip"
+                                               data-title="请确认是否解锁该${MODULE_NAME}？">
+                                                解锁
+                                            </a>
+                                        </#if>
+                                    </#if>
+                                    <a href="${URL}/doDelete.html?id=${entity.id!''}"
+                                       style="margin-left:10px;"
+                                       data-toggle="tip"
+                                       data-title="请确认是否删除该${MODULE_NAME}？">
+                                        <i class="layui-icon"
+                                           style="color:red;">&#x1006;</i>
+                                        删除
+                                    </a>
+                                </td>
+                            </tr>
+                        </#list>
+                    </#if>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row"
+             style="padding:5px;">
+            <div class="col-lg-12"
+                 id="page"
+                 style="text-align:center;"></div>
+        </div>
+    </div>
+</div>
+<script>
+	layui.use('layer', function () {
+		var layer = layui.layer;
+		<#if msg?? && msg == 'account_exist'>
+		layer.alert('当前支付方式已存在相同的账号，请重新填写', {icon: 2});
+		</#if>
+	});
+	layui.use(['laypage', 'layer'], function () {
+		var laypage = layui.laypage, layer = layui.layer;
+		laypage({
+			cont: 'page'
+			, pages: <#if entityList??>${entityList.totalPages}<#else>0</#if> //总页数
+			, curr: <#if entityList??>${entityList.number+1}<#else>0</#if>
+			, groups: 5 //连续显示分页数
+			, jump: function (data, first) {
+				if (!first) {
+					location.href = "${URL}/index.html?p=" + data.curr;
+				}
+			}
+		});
+	});
+</script>

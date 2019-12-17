@@ -1,0 +1,60 @@
+<script src="/js/jquery-3.1.0.min.js"/>
+<div id="imgForm">
+    <input type="text"
+           id="account"
+           name="account"
+           required
+           hidden
+           lay-verify="required"
+           value="${entity.account!''}">
+    <div class="layui-form-item">
+        <label class="layui-form-label">二维码：</label>
+        <div class="layui-input-inline">
+            <input type="file"
+                   id="imgFile"
+                   name="imgFile"
+                   accept="image/*">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label"></label>
+        <div class="layui-input-inline">
+            <div class="layui-box">
+            <span class="ukefu-logo">
+                <img id="img"
+                     src="${entity.account!''}"
+                     style="width:220px;">
+                </span>
+            </div>
+        </div>
+    </div>
+    <script type="application/javascript">
+		$(function () {
+			$("#imgFile").change(function () {
+				var files = $('#imgFile').prop('files');
+				var data = new FormData();
+				data.append('imgFile', files[0]);
+
+				$.ajax({
+					type: 'POST',
+					url: "/im/image/upload.html?userid=${userid}",
+					data: data,
+					cache: false,
+					processData: false,
+					contentType: false,
+					async: true,
+					dataType: "json",
+					success: function (result) {
+						// 替换预览框的照片,并把图片路径赋值给account
+						$("#img").attr("src", result.url);
+						$("#account").val(result.url);
+					},
+					fail: function () {
+						// 清空预览框的照片&account的值
+						$("#img").removeAttr("src");
+						$("#account").val(null);
+					}
+				});
+			});
+		});
+    </script>

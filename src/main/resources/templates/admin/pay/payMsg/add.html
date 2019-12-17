@@ -1,0 +1,74 @@
+<div class="uk-layui-form">
+    <form class="layui-form uk-form"
+          action="${URL}/doAdd.html"
+          method="post">
+        <div class="layui-form-item">
+            <label class="layui-form-label">支付方式代码：</label>
+            <div class="layui-input-inline">
+                <input type="text"
+                       name="code"
+                       required
+                       lay-verify="required"
+                       placeholder="请输入支付方式代码"
+                       autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">支付方式名称：</label>
+            <div class="layui-input-inline">
+                <input type="text"
+                       name="name"
+                       required
+                       lay-verify="required"
+                       placeholder="请输入支付方式名称"
+                       autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">支付方式类型：</label>
+            <div class="layui-input-inline">
+                <select name="type"
+                        lay-verify="required">
+                    <option value="">请选择一个支付方式类型</option>
+                    <option value="1">账号</option>
+                    <option value="2">二维码</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">支付信息:</label>
+            <div class="layui-input-inline">
+                <textarea name="msg"
+                          required
+                          lay-verify="required "
+                          placeholder="请输入支付信息"
+                          autocomplete="off"
+                          class="layui-textarea"></textarea>
+            </div>
+            <div class="layui-form-mid layui-word-aux">账号用{0}代替，账户名用{1}代替，换行用&lt;br/&gt;</div>
+            <div class="layui-form-mid layui-word-aux">示例:请亲转账到&lt;br/&gt;银行卡账号：{0}，&lt;br/&gt;账户名：{1}&lt;br/&gt;后截图给客服</div>
+        </div>
+        <div class="layui-form-button">
+            <div class="layui-button-block">
+                <button class="layui-btn"
+                        lay-submit
+                        lay-filter="formDemo">立即提交
+                </button>
+                <button type="reset"
+                        class="layui-btn layui-btn-primary">重置
+                </button>
+            </div>
+        </div>
+        <input type="hidden"
+               name="status"
+               value="1">
+    </form>
+</div>
+<script>
+	layui.use('form', function () {
+		var form = layui.form();
+		form.render(); //更新全部
+	});
+</script>

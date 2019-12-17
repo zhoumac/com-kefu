@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible"
+          content="ie=edge">
+    <title>Document</title>
+    <script src="/js/jquery-3.1.0.min.js"></script>
+    <script src="/layui/layui.js"></script>
+    <script src="/js/clipboard.min.js"></script>
+    <style>
+        html,
+        body,
+        div,
+        a,
+        ul,
+        li {
+            margin: 0;
+            padding: 0;
+            list-style-type: none
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            font-family: MicrosoftYaHei;
+            font-weight: normal;
+            font-stretch: normal;
+        }
+
+        body {
+            background: #F3F3F3;
+            width: calc(100% - 2px);
+            height: calc(100% - 2px);
+            border: 1px solid #f3f3f3;
+        }
+
+
+        .content {
+            width: 90%;
+            box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2);
+            border-radius: 11px;
+            margin: 0 auto;
+            margin-top: 20%;
+        }
+
+        .header {
+            width: 100%;
+            height: 40px;
+            background: #fff;
+            color: #454545;
+            font-size: 14px;
+            line-height: 40px;
+            text-align: center;
+            box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.2)
+        }
+
+        .body {
+            background: #FAFAFA;
+            margin-top: 5px
+        }
+
+        li {
+            height: 50px;
+            display: flex;
+            font-size: 14px;
+        }
+
+        .data-key {
+            min-width: 85px;
+            width: 85px;
+            text-align: right;
+            line-height: 50px;
+            color: #808080;
+        }
+
+        .data-value {
+            width: calc(100% - 85px - 45px);
+            color: #454545;
+            display: flex;
+            justify-content: center;
+            align-items: center
+        }
+
+        .data-value > div {
+            line-height: 15px;
+            width: calc(100% - 20px);
+            padding-left: 15px;
+            padding-right: 5px;
+            overflow-wrap: break-word
+        }
+
+        .copy {
+            width: 45px;
+        }
+
+        a {
+            display: block;
+            width: 100%;
+            height: 100%;
+            line-height: 50px;
+            color: #e16a00;
+            font-size: 14px;
+        }
+
+        .footer {
+            height: 70px;
+            width: 100%;
+            position: relative;
+            border-top: 1px solid #E6E6E6
+        }
+
+        .button {
+            width: 60%;
+            height: 45px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -60%);
+            text-align: center;
+            line-height: 45px;
+            background-color: ${backgroundColor};
+            border-radius: 10px;
+            color: #fff;
+            font-size: 15px
+        }
+    </style>
+</head>
+
+<body>
+<div class="content">
+    <div class="header">${payInfoMsg}</div>
+    <div class="body">
+        <ul>
+            <li>
+                <div class="data-key">账号 :</div>
+                <div class="data-value">
+                    <div id="text1">${account}</div>
+                </div>
+                <div class="copy">
+                    <a href="#"
+                       data-clipboard-action="copy"
+                       data-clipboard-target="#text1"
+                       style="cuosor:pointer"
+                       onclick="">复制</a>
+                </div>
+            </li>
+            <#if accountBank??>
+                <li>
+                    <div class="data-key">银行 :</div>
+                    <div class="data-value">
+                        <div id="text2">${accountBank}</div>
+                    </div>
+                    <div class="copy">
+                        <a href="#"
+                           data-clipboard-action="copy"
+                           data-clipboard-target="#text2"
+                           style="cuosor:pointer"
+                           onclick="">复制</a>
+                    </div>
+                </li>
+            </#if>
+            <#if accountUsername??>
+                <li>
+                    <div class="data-key">姓名 :</div>
+                    <div class="data-value">
+                        <div id="text3">${accountUsername}</div>
+                    </div>
+                    <div class="copy">
+                        <a href="#"
+                           data-clipboard-action="copy"
+                           data-clipboard-target="#text3"
+                           style="cuosor:pointer"
+                           onclick="">复制</a>
+                    </div>
+                </li>
+                <#if accountUsername?length gt 1>
+                    <li>
+                        <div class="data-key">姓 :</div>
+                        <div class="data-value">
+                            <div id="text4">${accountUsername?substring(0,1)}</div>
+                        </div>
+                        <div class="copy">
+                            <a href="#"
+                               data-clipboard-action="copy"
+                               data-clipboard-target="#text4"
+                               style="cuosor:pointer"
+                               onclick="">复制</a>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="data-key">名 :</div>
+                        <div class="data-value">
+                            <div id="text5">${accountUsername?substring(1)}</div>
+                        </div>
+                        <div class="copy">
+                            <a href="#"
+                               data-clipboard-action="copy"
+                               data-clipboard-target="#text5"
+                               style="cuosor:pointer"
+                               onclick="">复制</a>
+                        </div>
+                    </li>
+                </#if>
+            </#if>
+        </ul>
+        <div class="footer">
+            <div class="button"
+                 onclick="formClose()">返回聊天页面
+            </div>
+        </div>
+    </div>
+
+</div>
+<script>
+    var clipboard = new ClipboardJS('a');
+    // 初始化layer
+    var layer;
+    layui.use('layer', function () {
+        layer = layui.layer;
+        clipboard.on('success', function (e) {
+            layer.msg("复制成功!")
+        });
+        clipboard.on('error', function (e) {
+            layer.msg("复制失败,请您手动复制!")
+        });
+    });
+    // 关闭按钮
+    window.formClose = function () {
+        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+        parent.layer.close(index); //再执行关闭
+    };
+
+    //复制相关
+    function copyDetail(e) {
+        var text = document.getElementById(e).innerHTML;
+        copyText(text);
+    }
+
+    function copyText(text) {
+        // 数字没有 .length 不能执行selectText 需要转化成字符串
+        var textString = text.toString();
+        var input = document.createElement('div');
+        input.id = 'copy-input';
+        input.readOnly = true;        // 防止ios聚焦触发键盘事件
+        input.style.position = 'absolute';
+        input.style.left = '-1000px';
+        input.style.zIndex = '-1000';
+        document.body.appendChild(input);
+
+        input.value = textString;
+        // ios必须先选中文字且不支持 input.select();
+        selectText(input, 0, textString.length);
+        if (document.execCommand('copy')) {
+            document.execCommand('copy');
+            layer.msg('复制成功');
+        } else {
+            layer.msg('复制失败,请您手动复制');
+        }
+        input.blur();
+
+        // input自带的select()方法在苹果端无法进行选择，所以需要自己去写一个类似的方法
+        // 选择文本。createTextRange(setSelectionRange)是input方法
+    }
+
+    function selectText(textbox, startIndex, stopIndex) {
+        if (textbox.createTextRange) {// ie
+            var range = textbox.createTextRange();
+            range.collapse(true);
+            range.moveStart('character', startIndex); // 起始光标
+            range.moveEnd('character', stopIndex - startIndex); // 结束光标
+            range.select(); // android
+        } else {
+            textbox.setSelectionRange(startIndex, stopIndex); // ios
+            textbox.focus();
+        }
+    }
+</script>
+</body>
+</html>

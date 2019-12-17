@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible"
+          content="ie=edge">
+    <title>Document</title>
+    <script src="/js/jquery-3.1.0.min.js"></script>
+    <script src="/layui/layui.js"></script>
+    <script src="/js/clipboard.min.js"></script>
+    <style>
+
+        html, body, table, tr, td, div, a, thead {
+            margin: 0;
+            padding: 0;
+            font-size: 14px;
+        }
+
+        html {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        body {
+            background-color: ${backgroundColor};
+            /*margin:0 auto;*/
+            width: 100%;
+            /*padding-top: 20%;*/
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        table {
+            vertical-align: middle;
+            width: 90%;
+            border-radius: 10px;
+            background: #fff;
+            margin: 0 auto;
+            border-collapse: separate;
+            border-spacing: 0px 0px;
+            /*padding-left: 10px;*/
+        }
+
+        thead tr {
+            height: 35px;
+            line-height: 35px;
+            font-size: 15px;
+        }
+
+        .paddingleft {
+            padding-left: 10px;
+        }
+
+        .paddingright {
+            padding-right: 20px;
+        }
+
+        tbody > tr {
+            height: 60px;
+            line-height: 60px;
+            /*padding-left: 10px;*/
+            /*padding-right: 20px;*/
+        }
+
+        .td-width {
+            width: 60px;
+        }
+
+        .left {
+            text-align: left;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .over-td {
+            max-width: 180px;
+            overflow-wrap: break-word;
+            height: 20px;
+            /*display: table-cell;*/
+            line-height: 20px;
+            vertical-align: middle;;
+        }
+
+        .layui-table td, .layui-table th {
+            position: relative;
+            padding: 20px 20px;
+            min-height: 20px;
+            line-height: 20px;
+            font-size: 20px;
+            color: #000000
+        }
+
+        .layui-btn {
+            display: inline-block;
+            height: 20px;
+            max-width: 60px;
+            text-align: center;
+            color: ${backgroundColor};
+            font-size: 15px;
+            line-height: 20px;
+            background: #fff;
+        }
+
+        .first-td {
+            width: 60px;
+        }
+
+        .return {
+            display: block;
+            width: 100%;
+            height: 60px;
+            line-height: 60px;
+            background: #FFB800;
+            color: #fff;
+            margin: 0 auto;
+            /*border-radius: 100px;*/
+            text-decoration: none;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            letter-spacing: 1px;
+            font-size: 18px;
+        }
+
+
+    </style>
+</head>
+<table>
+    <colgroup>
+        <col>
+        <col>
+        <col>
+    </colgroup>
+    <thead>
+    <tr>
+        <th colspan="3"
+            style="text-align: center">${payInfoMsg}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td class="first-td center ">账号</td>
+        <td
+            class="left  ">
+            <div id="text1"
+                 class="over-td">${account}</div>
+        </td>
+        <td class="td-width center ">
+            <a
+                    data-clipboard-action="copy"
+                    data-clipboard-target="#text1"
+                    class="layui-btn"
+                    style="cuosor:pointer"
+                    onclick="">复制2</a>
+        </td>
+    </tr>
+    <#if accountBank??>
+        <tr>
+            <td class="first-td center ">银行</td>
+            <td
+                class="left  ">
+                <div id="text2"
+                     class="over-td">${accountBank}</div>
+            </td>
+            <td class="td-width center ">
+                <a
+                        <#--                        data-clipboard-action="copy"-->
+                        <#--                   data-clipboard-target="#text4"-->
+                        class="layui-btn"
+                        onclick="copyDetail('text2')">复制</a>
+            </td>
+        </tr>
+    </#if>
+    <#if accountUsername??>
+        <tr>
+            <td class="first-td center">姓名</td>
+            <td
+                class="left over-td ">
+                <div id="text3"
+                     class="over-td">${accountUsername}</div>
+            </td>
+            <td class="td-width center ">
+                <a
+                        <#--                        data-clipboard-action="copy"-->
+                        <#--                   data-clipboard-target="#text2"-->
+                        class="layui-btn layui-btn-radius"
+                        onclick="copyDetail('text3')">复制</a>
+            </td>
+        </tr>
+        <#if accountUsername?length gt 1>
+            <tr>
+                <td class="first-td center">姓</td>
+                <td
+                    class="left over-td ">
+                    <div id="text4"
+                         class="over-td">${accountUsername?substring(0,1)}</div>
+                </td>
+                <td class="td-width center ">
+                    <a
+                            <#--                            data-clipboard-action="copy"-->
+                            <#--                       data-clipboard-target="#text3"-->
+                            class="layui-btn layui-btn-radius"
+                            onclick="copyDetail('text4')">复制</a>
+                </td>
+            </tr>
+            <tr>
+                <td class="first-td center">名</td>
+                <td
+                    class="left over-td ">
+                    <div id="text5"
+                         class="over-td last-name">${accountUsername?substring(1)}</div>
+                </td>
+                <td class="td-width center ">
+                    <a
+                            <#--                            data-clipboard-action="copy"-->
+                            <#--                       data-clipboard-target="#text4"-->
+                            class="layui-btn layui-btn-radius"
+                            onclick="copyDetail('text5')">复制</a>
+                </td>
+            </tr>
+        </#if>
+    </#if>
+    <tr>
+        <td class="center"
+            colspan="3">
+            <a class="return"
+               href="javascript:"
+               onclick="formClose()">
+                返回聊天页面
+            </a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<script>
+    var clipboard = new ClipboardJS('a');
+    var layer;
+    layui.use('layer', function () {
+        layer = layui.layer;
+        clipboard.on('success', function (e) {
+            layer.msg("复制成功!")
+        });
+        clipboard.on('error', function (e) {
+            layer.msg("复制失败,请您手动复制!")
+        });
+    });
+    window.formClose = function () {
+        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+        parent.layer.close(index); //再执行关闭
+    }
+
+    function copyDetail(e) {
+        var text = document.getElementById(e).innerHTML;
+        copyText(text);
+    }
+
+    function copyText(text) {
+        // 数字没有 .length 不能执行selectText 需要转化成字符串
+        var textString = text.toString();
+        var input = document.createElement('input');
+        input.id = 'copy-input';
+        input.readOnly = 'readOnly';        // 防止ios聚焦触发键盘事件
+        input.style.position = 'absolute';
+        input.style.left = '-1000px';
+        input.style.zIndex = '-1000';
+        document.body.appendChild(input);
+
+        input.value = textString;
+        // ios必须先选中文字且不支持 input.select();
+        selectText(input, 0, textString.length);
+        // console.log(document.execCommand('copy'), 'execCommand');
+        if (document.execCommand('copy')) {
+            document.execCommand('copy');
+            layer.msg('复制成功');
+        } else {
+            layer.msg('复制失败,请您手动复制');
+        }
+        input.blur();
+
+        // input自带的select()方法在苹果端无法进行选择，所以需要自己去写一个类似的方法
+        // 选择文本。createTextRange(setSelectionRange)是input方法
+    }
+
+    function selectText(textbox, startIndex, stopIndex) {
+        if (textbox.createTextRange) {// ie
+            var range = textbox.createTextRange();
+            range.collapse(true);
+            range.moveStart('character', startIndex); // 起始光标
+            range.moveEnd('character', stopIndex - startIndex); // 结束光标
+            range.select(); // android
+        } else {
+            textbox.setSelectionRange(startIndex, stopIndex); // ios
+            textbox.focus();
+        }
+    }
+</script>
+</body>
+</html>
