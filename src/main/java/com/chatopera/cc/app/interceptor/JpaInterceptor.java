@@ -1,6 +1,5 @@
 package com.chatopera.cc.app.interceptor;
 
-import com.alibaba.druid.sql.visitor.functions.Insert;
 import com.google.common.collect.Sets;
 import lombok.SneakyThrows;
 import net.sf.jsqlparser.parser.CCJSqlParserManager;
@@ -14,7 +13,6 @@ import org.hibernate.resource.jdbc.spi.StatementInspector;
 import org.springframework.util.CollectionUtils;
 
 import java.io.StringReader;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -32,7 +30,6 @@ public class JpaInterceptor implements StatementInspector {
         List<String> tableNames = JpaInterceptor.getTableNames(sql);
         if(!CollectionUtils.isEmpty(tableNames)){
             JpaInterceptor.useTables.addAll(tableNames);
-            System.out.println(tableNames.toString());
         }
 
         return sql;

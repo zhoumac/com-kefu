@@ -47,7 +47,7 @@ public class HazelcastMonitorController extends Handler{
     	jsonObjectMap.put("agentStatus" , convert(CacheHelper.getAgentStatusCacheBean().getStatics())) ;
     	
     	jsonObjectMap.put("apiUser" , convert(CacheHelper.getApiUserCacheBean().getStatics())) ;
-    	jsonObjectMap.put("imrCache" , convert(CacheHelper.getIMRCacheBean().getStatics())) ;
+
     	jsonObjectMap.put("onlineUser" , convert(CacheHelper.getOnlineUserCacheBean().getStatics())) ;
     	jsonObjectMap.put("systemCache" , convert(CacheHelper.getSystemCacheBean().getStatics())) ;
     	

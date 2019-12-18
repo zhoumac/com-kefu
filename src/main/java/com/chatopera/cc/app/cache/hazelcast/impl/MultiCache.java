@@ -13,7 +13,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *//*
+
 package com.chatopera.cc.app.cache.hazelcast.impl;
 
 import com.chatopera.cc.app.cache.CacheBean;
@@ -124,3 +125,4 @@ public class MultiCache implements CacheBean {
 		return getInstance().getMap(getName()).get(key);
 	}
 }
+*/

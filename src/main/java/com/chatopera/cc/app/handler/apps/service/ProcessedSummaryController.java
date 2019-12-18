@@ -13,7 +13,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *//*
+
 package com.chatopera.cc.app.handler.apps.service;
 
 import java.io.IOException;
@@ -77,7 +78,8 @@ public class ProcessedSummaryController extends Handler{
 	@Autowired
 	private ContactsRepository contactsRes ;
 	
-	/**
+	*/
+/**
 	 * 按条件查询
 	 * @param map
 	 * @param request
@@ -87,7 +89,8 @@ public class ProcessedSummaryController extends Handler{
 	 * @param end
 	 * @param direction
 	 * @return
-	 */
+	 *//*
+
 	@RequestMapping(value = "/index")
     @Menu(type = "agent" , subtype = "processed" , access = false)
     public ModelAndView index(ModelMap map , HttpServletRequest request ,@Valid final String ani , @Valid final String called , @Valid final String begin , @Valid final String end , @Valid final String direction) {
@@ -248,3 +251,4 @@ public class ProcessedSummaryController extends Handler{
 	        return ;
 	    }
 }
+*/

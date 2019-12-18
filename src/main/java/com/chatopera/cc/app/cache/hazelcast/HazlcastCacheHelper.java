@@ -22,9 +22,7 @@ import com.chatopera.cc.app.cache.CacheInstance;
 import com.chatopera.cc.app.cache.hazelcast.impl.AgentStatusCache;
 import com.chatopera.cc.app.cache.hazelcast.impl.AgentUserCache;
 import com.chatopera.cc.app.cache.hazelcast.impl.ApiUserCache;
-import com.chatopera.cc.app.cache.hazelcast.impl.CallCenterCache;
-import com.chatopera.cc.app.cache.hazelcast.impl.JobCache;
-import com.chatopera.cc.app.cache.hazelcast.impl.MultiCache;
+
 import com.chatopera.cc.app.cache.hazelcast.impl.OnlineCache;
 import com.chatopera.cc.app.cache.hazelcast.impl.SystemCache;
 /**
@@ -63,29 +61,10 @@ public class HazlcastCacheHelper implements CacheInstance {
 	public CacheBean getSystemCacheBean() {
 		return MainContext.getContext().getBean(SystemCache.class).getCacheInstance(CacheServiceEnum.HAZLCAST_CULUSTER_SYSTEM.toString()) ;
 	}
-	@Override
-	public CacheBean getIMRCacheBean() {
-		return MainContext.getContext().getBean(MultiCache.class).getCacheInstance(CacheServiceEnum.HAZLCAST_IMR_CACHE.toString()) ;
-	}
-	@Override
-	public CacheBean getCallCenterCacheBean() {
-		return MainContext.getContext().getBean(CallCenterCache.class).getCacheInstance(CacheServiceEnum.CALLCENTER_CURRENT_CALL.toString()) ;
-	}
-	@Override
-	public CacheBean getCallCenterAgentCacheBean() {
-		return MainContext.getContext().getBean(CallCenterCache.class).getCacheInstance(CacheServiceEnum.CALLCENTER_AGENT.toString()) ;
-	}
+
 	@Override
 	public CacheBean getApiUserCacheBean() {
 		return MainContext.getContext().getBean(ApiUserCache.class).getCacheInstance(CacheServiceEnum.API_USER_CACHE.toString()) ;
 	}
-	@Override
-	public CacheBean getJobCacheBean() {
-		return MainContext.getContext().getBean(JobCache.class).getCacheInstance(CacheServiceEnum.JOB_CACHE.toString()) ;
-	}
-	@Override
-	public CacheBean getCallOutCacheBean() {
-		// TODO Auto-generated method stub
-		return MainContext.getContext().getBean(JobCache.class).getCacheInstance(CacheServiceEnum.HAZLCAST_CALLOUT_CACHE.toString()) ;
-	}
+
 }

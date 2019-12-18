@@ -45,23 +45,7 @@ public interface CacheInstance {
 	public CacheBean getSystemCacheBean();
 	
 	
-	/**
-	 * IMR指令
-	 * @return
-	 */
-	public CacheBean getIMRCacheBean();
-	
-	/**
-	 * IMR指令
-	 * @return
-	 */
-	public CacheBean getCallCenterCacheBean();
-	
-	/**
-	 * IMR指令
-	 * @return
-	 */
-	public CacheBean getCallCenterAgentCacheBean();
+
 	
 	/**
 	 * IMR指令
@@ -69,16 +53,7 @@ public interface CacheInstance {
 	 */
 	public CacheBean getApiUserCacheBean();
 	
-	/**
-	 * IMR指令
-	 * @return
-	 */
-	public CacheBean getJobCacheBean();
-	
-	/**
-	 * 外呼
-	 * @return
-	 */
-	public CacheBean getCallOutCacheBean();
+
+
 	
 }

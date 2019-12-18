@@ -41,24 +41,9 @@ public class CacheHelper {
 	public static CacheBean getSystemCacheBean() {
 		return cacheInstance!=null ? cacheInstance.getSystemCacheBean() : null ;
 	}
-	
-	public static CacheBean getIMRCacheBean() {
-		return cacheInstance!=null ? cacheInstance.getIMRCacheBean() : null ;
-	}
-	public static CacheBean getCallCenterCacheBean() {
-		return cacheInstance!=null ? cacheInstance.getCallCenterCacheBean() : null ;
-	}
-	public static CacheBean getCallCenterAgentCacheBean() {
-		return cacheInstance!=null ? cacheInstance.getCallCenterAgentCacheBean() : null ;
-	}
+
 	public static CacheBean getApiUserCacheBean() {
 		return cacheInstance!=null ? cacheInstance.getApiUserCacheBean() : null ;
 	}
-	public static CacheBean getJobCacheBean() {
-		return cacheInstance!=null ? cacheInstance.getJobCacheBean(): null ;
-	}
-	public static CacheBean getCallOutCacheBean() {
-		return cacheInstance!=null ? cacheInstance.getCallOutCacheBean(): null ;
-	}
-	
+
 }

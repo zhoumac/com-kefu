@@ -16,39 +16,35 @@
  */
 package com.chatopera.cc.app.handler.api.rest;
 
-import com.chatopera.cc.app.handler.Handler;
+import com.chatopera.cc.app.aop.CacheAop;
+import com.chatopera.cc.app.aop.LogAop;
 import com.chatopera.cc.app.interceptor.JpaInterceptor;
-import com.chatopera.cc.app.model.CousultInvite;
-import com.chatopera.cc.app.persistence.repository.ConsultInviteRepository;
+import com.chatopera.cc.app.aop.model.UseMessage;
 import com.chatopera.cc.util.Menu;
-import com.chatopera.cc.util.RestResult;
-import com.chatopera.cc.util.RestResultType;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.Set;
 
 @RestController
 @RequestMapping("/test")
-@Api(value = "测试" , description = "测试功能")
+@Api(value = "测试" )
 public class ApiTestController {
 
 	@GetMapping("getUseTables")
-	@ApiOperation("点击功能后获取使用过的数据库")
+	@ApiOperation("点击功能后获使用过的系统数据")
 	@Menu(subtype = "token",access = true)
 
-	public Set<String> getUseTables() {
+	public UseMessage getUseTables() {
 		Set<String> useTables = JpaInterceptor.useTables;
-		return useTables;
+		Set<String> useControllers = LogAop.useControllers;
+		UseMessage useMessage = UseMessage.builder().useTables(useTables)
+				.useControllers(useControllers)
+				.useCache(CacheAop.useCache)
+				.build();
+		return useMessage;
 	}
 }

@@ -13,7 +13,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *//*
+
 package com.chatopera.cc.app.handler.apps.setting;
 
 import com.chatopera.cc.app.algorithm.AutomaticServiceDist;
@@ -390,4 +391,4 @@ public class IMAgentController extends Handler {
 		MainUtils.initAdv(super.getOrgi(request));
 		return request(super.createRequestPageTempletResponse("redirect:/setting/adv.html?adpos=" + adpos));
 	}
-}
+}*/
