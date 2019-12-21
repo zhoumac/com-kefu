@@ -29,13 +29,12 @@ import javax.persistence.Transient;
 
 import com.chatopera.cc.app.basic.MainUtils;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.data.elasticsearch.annotations.Document;
 
 
 /**
  * 表 uk_xiaoe_topic
  */
-@Document(indexName = "cskefu", type = "xiaoe_topic")
+
 @Entity
 @Table(name = "uk_xiaoe_topic")
 @org.hibernate.annotations.Proxy(lazy = false)

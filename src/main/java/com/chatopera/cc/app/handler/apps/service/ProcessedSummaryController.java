@@ -48,7 +48,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.chatopera.cc.util.Menu;
 import com.chatopera.cc.concurrent.dsdata.export.ExcelExporterProcess;
-import com.chatopera.cc.app.persistence.es.ContactsRepository;
+import com.chatopera.cc.app.persistence.repository.ContactsRepository;
 import com.chatopera.cc.app.persistence.repository.AgentServiceRepository;
 import com.chatopera.cc.app.persistence.repository.MetadataRepository;
 import com.chatopera.cc.app.persistence.repository.ServiceSummaryRepository;

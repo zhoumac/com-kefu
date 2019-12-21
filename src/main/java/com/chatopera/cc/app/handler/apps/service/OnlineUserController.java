@@ -20,7 +20,6 @@ import com.chatopera.cc.app.basic.MainContext;
 import com.chatopera.cc.app.basic.MainUtils;
 import com.chatopera.cc.app.handler.Handler;
 import com.chatopera.cc.app.model.*;
-import com.chatopera.cc.app.persistence.es.ContactsRepository;
 import com.chatopera.cc.app.persistence.impl.AgentUserService;
 import com.chatopera.cc.app.persistence.repository.*;
 import com.chatopera.cc.util.Menu;

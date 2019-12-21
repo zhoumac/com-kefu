@@ -14,12 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.chatopera.cc.app.cache.hazelcast.impl;
+package com.chatopera.cc.app.cache.redis.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.chatopera.cc.app.cache.CacheBean;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -27,10 +26,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.concurrent.locks.Lock;
+import java.util.Set;
 
-@Service("api_user_cache")
-public class ApiUserCache  implements CacheBean {
+@Service("online_cache")
+public class OnlineCache  implements CacheBean {
 
 	@Autowired
 	private RedisTemplate redisTemplate;
@@ -54,7 +53,7 @@ public class ApiUserCache  implements CacheBean {
 
 	@Override
 	public Object delete(String key, String orgi) {
-		return 	getHashOperations().delete(cacheName,key);
+		return 	getHashOperations().delete(cacheName,orgi);
 	}
 
 	@Override
@@ -116,8 +115,8 @@ public class ApiUserCache  implements CacheBean {
 	@Override
 	public long getSize() {
 
-		Map map = (Map)redisTemplate.opsForHash().keys(cacheName);
+		Set set = (Set)redisTemplate.opsForHash().keys(cacheName);
 
-		return map.size();
+		return set.size();
 	}
 }

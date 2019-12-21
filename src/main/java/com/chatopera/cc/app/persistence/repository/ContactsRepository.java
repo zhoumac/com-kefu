@@ -14,11 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.chatopera.cc.app.persistence.es;
+package com.chatopera.cc.app.persistence.repository;
 
-import com.chatopera.cc.app.model.Topic;
-import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-public interface TopicRepository extends  ElasticsearchRepository<Topic, String> , TopicEsCommonRepository {
-	
+import com.chatopera.cc.app.model.Contacts;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ContactsRepository  extends JpaRepository<Contacts, String> {
+	public Page<Contacts> findByCreaterAndSharesAndOrgi(String creater , String shares , String orgi, Pageable page) ;
+
+	public Page<Contacts> findByOrgi(String orgi, Pageable page) ;
+
 }

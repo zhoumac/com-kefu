@@ -35,12 +35,9 @@ import javax.validation.Valid;
 
 import com.chatopera.cc.app.basic.MainContext;
 import com.chatopera.cc.app.basic.MainUtils;
-import com.chatopera.cc.app.persistence.es.ContactsRepository;
+import com.chatopera.cc.app.persistence.repository.*;
 import com.chatopera.cc.util.Menu;
 import com.chatopera.cc.concurrent.dsdata.export.ExcelExporterProcess;
-import com.chatopera.cc.app.persistence.repository.AgentServiceRepository;
-import com.chatopera.cc.app.persistence.repository.ServiceSummaryRepository;
-import com.chatopera.cc.app.persistence.repository.TagRepository;
 import com.chatopera.cc.app.model.AgentServiceSummary;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +50,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.chatopera.cc.app.persistence.repository.MetadataRepository;
 import com.chatopera.cc.app.handler.Handler;
 import com.chatopera.cc.app.model.AgentService;
 import com.chatopera.cc.app.model.Contacts;

@@ -26,13 +26,9 @@ import javax.persistence.Id;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldIndex;
-import org.springframework.data.elasticsearch.annotations.FieldType;
+
 
 import com.chatopera.cc.app.basic.MainUtils;
-@Document(indexName = "cskefu", type = "kbs_topiccomment")
 public class KbsTopicComment implements UKAgg{
 
 	/**
@@ -45,7 +41,6 @@ public class KbsTopicComment implements UKAgg{
 	
 	private Date createtime = new Date() ;
 	
-	@Field(index = FieldIndex.not_analyzed , type = FieldType.String)
 	private String dataid ;
 	
 	private String content ; 	//评论内容

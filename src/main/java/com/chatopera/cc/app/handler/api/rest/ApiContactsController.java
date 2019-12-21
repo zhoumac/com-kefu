@@ -18,7 +18,7 @@
 package com.chatopera.cc.app.handler.api.rest;
 
 import com.chatopera.cc.util.Menu;
-import com.chatopera.cc.app.persistence.es.ContactsRepository;
+import com.chatopera.cc.app.persistence.repository.ContactsRepository;
 import com.chatopera.cc.util.RestResult;
 import com.chatopera.cc.util.RestResultType;
 import com.chatopera.cc.app.handler.Handler;

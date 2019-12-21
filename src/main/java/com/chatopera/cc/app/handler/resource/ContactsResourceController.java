@@ -19,7 +19,7 @@ package com.chatopera.cc.app.handler.resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import com.chatopera.cc.app.persistence.es.ContactsRepository;
+import com.chatopera.cc.app.persistence.repository.ContactsRepository;
 import com.chatopera.cc.util.Menu;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -42,7 +42,7 @@ public class ContactsResourceController extends Handler{
 		if(q==null){
 			q = "" ;
 		}
-    	map.addAttribute("contactsList", contactsRes.findByCreaterAndSharesAndOrgi(super.getUser(request).getId(),super.getUser(request).getId(),super.getOrgi(request), false , q , new PageRequest(0, 10))) ;
+    	map.addAttribute("contactsList", contactsRes.findByCreaterAndSharesAndOrgi(super.getUser(request).getId(),super.getUser(request).getId(),super.getOrgi(request) , new PageRequest(0, 10))) ;
         return request(super.createRequestPageTempletResponse("/public/contacts"));
     }
 }

@@ -23,7 +23,7 @@ import com.chatopera.cc.util.Menu;
 import com.chatopera.cc.exception.CSKefuRestException;
 import com.chatopera.cc.util.json.GsonTools;
 import com.chatopera.cc.app.persistence.es.ContactNotesRepository;
-import com.chatopera.cc.app.persistence.es.ContactsRepository;
+import com.chatopera.cc.app.persistence.repository.ContactsRepository;
 import com.chatopera.cc.app.persistence.repository.OrganRepository;
 import com.chatopera.cc.app.persistence.repository.UserRepository;
 import com.chatopera.cc.app.handler.Handler;

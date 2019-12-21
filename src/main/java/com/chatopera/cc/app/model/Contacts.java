@@ -27,9 +27,7 @@ import javax.persistence.Table;
 import com.chatopera.cc.app.basic.MainUtils;
 import io.swagger.annotations.ApiModel;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.data.elasticsearch.annotations.Document;
 @ApiModel("联系人")
-@Document(indexName = "cskefu", type = "contacts")
 @Entity
 @Table(name = "uk_contacts")
 @org.hibernate.annotations.Proxy(lazy = false)

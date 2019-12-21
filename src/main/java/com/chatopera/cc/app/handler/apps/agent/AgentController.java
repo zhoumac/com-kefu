@@ -26,7 +26,6 @@ import com.chatopera.cc.app.im.message.ChatMessage;
 import com.chatopera.cc.app.im.router.OutMessageRouter;
 import com.chatopera.cc.app.model.*;
 import com.chatopera.cc.app.persistence.blob.JpaBlobHelper;
-import com.chatopera.cc.app.persistence.es.ContactsRepository;
 import com.chatopera.cc.app.persistence.repository.*;
 import com.chatopera.cc.exception.CSKefuException;
 import com.chatopera.cc.exchange.DataExchangeInterface;

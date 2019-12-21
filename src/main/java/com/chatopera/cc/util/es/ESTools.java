@@ -13,7 +13,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *//*
+
 package com.chatopera.cc.util.es;
 
 
@@ -32,9 +33,11 @@ import com.chatopera.cc.app.model.MetadataTable;
 
 public class ESTools {
 	private static final Logger log = LoggerFactory.getLogger(ESTools	.class); 
-	/*public static boolean checkMapping(String tb,String orgi){
+	*/
+/*public static boolean checkMapping(String tb,String orgi){
 		return MainContext.getTemplet().typeExists(orgi, tb) ;
-	}*/
+	}*//*
+
 	
 	public static void mapping(MetadataTable tb , String orgi) throws ElasticsearchException, IOException{
 		log.info(tb.getTablename()+" ORGI : "+orgi+" Mapping Not Exists , Waiting Form init ......");
@@ -80,3 +83,4 @@ public class ESTools {
 
 	}
 }
+*/

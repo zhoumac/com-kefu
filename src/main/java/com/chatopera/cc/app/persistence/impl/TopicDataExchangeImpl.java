@@ -13,11 +13,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *//*
+
 package com.chatopera.cc.app.persistence.impl;
 
 import com.chatopera.cc.app.model.Topic;
-import com.chatopera.cc.app.persistence.es.TopicRepository;
 import com.chatopera.cc.exchange.DataExchangeInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,8 +27,7 @@ import java.util.List;
 
 @Service("topic")
 public class TopicDataExchangeImpl implements DataExchangeInterface{
-	@Autowired
-	private TopicRepository topicRes ;
+
 
 	@Override
 	public Topic getDataByIdAndOrgi(String id, String orgi){
@@ -55,3 +54,4 @@ public class TopicDataExchangeImpl implements DataExchangeInterface{
 		
 	}
 }
+*/

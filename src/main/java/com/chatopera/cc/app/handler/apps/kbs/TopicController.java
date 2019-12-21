@@ -13,7 +13,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *//*
+
 
 package com.chatopera.cc.app.handler.apps.kbs;
 
@@ -31,7 +32,6 @@ import javax.validation.Valid;
 
 import com.chatopera.cc.app.basic.MainContext;
 import com.chatopera.cc.app.basic.MainUtils;
-import com.chatopera.cc.app.persistence.es.TopicRepository;
 import com.chatopera.cc.util.Menu;
 import com.chatopera.cc.exchange.DataExchangeInterface;
 import com.chatopera.cc.concurrent.dsdata.export.ExcelExporterProcess;
@@ -77,9 +77,7 @@ public class TopicController extends Handler{
 	@Autowired
 	private SysDicRepository sysDicRepository;
 	
-	@Autowired
-	private TopicRepository topicRes;
-	
+
 	
 	@Autowired
 	private MetadataRepository metadataRes ;
@@ -147,10 +145,12 @@ public class TopicController extends Handler{
 			if(topicItemList.size() > 0) {
 				topicItemRes.save(topicItemList) ;
 			}
-    		/**
+    		*/
+/**
     		 * 重新缓存
     		 * 
-    		 */
+    		 *//*
+
     		OnlineUserUtils.resetHotTopic((DataExchangeInterface) MainContext.getContext().getBean("topic") , super.getUser(request) , super.getOrgi(request) , aiid) ;
     	}
     	return request(super.createRequestPageTempletResponse("redirect:/apps/topic.html"+(!StringUtils.isBlank(type) ? "?type="+type : "")));
@@ -198,10 +198,12 @@ public class TopicController extends Handler{
 				topicItemRes.save(topicItemList) ;
 			}
     		
-    		/**
+    		*/
+/**
     		 * 重新缓存
     		 * 
-    		 */
+    		 *//*
+
     		OnlineUserUtils.resetHotTopic((DataExchangeInterface) MainContext.getContext().getBean("topic") , super.getUser(request) , super.getOrgi(request),aiid) ;
     	}
     	return request(super.createRequestPageTempletResponse("redirect:/apps/topic.html"+(!StringUtils.isBlank(type) ? "?type="+type : "")));
@@ -212,10 +214,12 @@ public class TopicController extends Handler{
     public ModelAndView knowledgedelete(HttpServletRequest request ,@Valid String id , @Valid String type, @Valid String aiid) {
     	if(!StringUtils.isBlank(id)){
     		topicRes.delete(topicRes.findOne(id));
-    		/**
+    		*/
+/**
     		 * 重新缓存
     		 * 
-    		 */
+    		 *//*
+
     		topicItemRes.delete(topicItemRes.findByTopicid(id)) ;
     		
     		OnlineUserUtils.resetHotTopic((DataExchangeInterface) MainContext.getContext().getBean("topic") , super.getUser(request) , super.getOrgi(request) , aiid) ;
@@ -429,3 +433,4 @@ public class TopicController extends Handler{
         return ;
     }
 }
+*/

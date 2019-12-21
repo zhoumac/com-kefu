@@ -17,7 +17,7 @@
 package com.chatopera.cc.app.persistence.impl;
 
 import com.chatopera.cc.app.model.Contacts;
-import com.chatopera.cc.app.persistence.es.ContactsRepository;
+import com.chatopera.cc.app.persistence.repository.ContactsRepository;
 import com.chatopera.cc.exchange.DataExchangeInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

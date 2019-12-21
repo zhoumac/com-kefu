@@ -14,23 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.chatopera.cc.app.cache.hazelcast;
+package com.chatopera.cc.app.cache.redis.impl;
 
 import com.chatopera.cc.app.basic.MainContext;
 import com.chatopera.cc.app.cache.CacheBean;
 import com.chatopera.cc.app.cache.CacheInstance;
-import com.chatopera.cc.app.cache.hazelcast.impl.AgentStatusCache;
-import com.chatopera.cc.app.cache.hazelcast.impl.AgentUserCache;
-import com.chatopera.cc.app.cache.hazelcast.impl.ApiUserCache;
+import com.chatopera.cc.app.cache.redis.impl.AgentStatusCache;
+import com.chatopera.cc.app.cache.redis.impl.AgentUserCache;
+import com.chatopera.cc.app.cache.redis.impl.ApiUserCache;
 
-import com.chatopera.cc.app.cache.hazelcast.impl.OnlineCache;
-import com.chatopera.cc.app.cache.hazelcast.impl.SystemCache;
+import com.chatopera.cc.app.cache.redis.impl.OnlineCache;
+import com.chatopera.cc.app.cache.redis.impl.SystemCache;
 /**
  * Hazlcast缓存处理实例类
  * @author admin
  *
  */
-public class HazlcastCacheHelper implements CacheInstance {
+public class RedisInstanceCache implements CacheInstance {
 	/**
 	 * 服务类型枚举
 	 * @author admin

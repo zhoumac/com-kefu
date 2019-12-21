@@ -16,8 +16,7 @@
  */
 package com.chatopera.cc.app.cache;
 
-import com.chatopera.cc.app.aop.util.PrintLog;
-import com.chatopera.cc.app.cache.hazelcast.HazlcastCacheHelper;
+import com.chatopera.cc.app.cache.redis.impl.RedisInstanceCache;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -30,7 +29,7 @@ public class CacheHelper {
 	public static CacheHelper getInstance(){
 		return instance ;
 	}
-	private static CacheInstance cacheInstance = new HazlcastCacheHelper();
+	private static CacheInstance cacheInstance = new RedisInstanceCache();
 	
 	public static CacheBean getAgentStatusCacheBean() {
 		return cacheInstance!=null ? cacheInstance.getAgentStatusCacheBean() : null;

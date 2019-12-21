@@ -46,7 +46,7 @@ public class CacheAop {
 	/**
 	 * 拦截+任意返回值，任意方法参数，当前包和子包的方法
 	 */
-	@Pointcut("execution(* com.chatopera.cc.app.cache.hazelcast..*(..))")
+	@Pointcut("execution(* com.chatopera.cc.app.cache.redis..*(..))")
 	public void pointUrl() {
 
 	}
