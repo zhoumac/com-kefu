@@ -16,7 +16,6 @@
  */
 package com.chatopera.cc.util;
 
-import static org.elasticsearch.index.query.QueryBuilders.termQuery;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -23,7 +23,6 @@ import com.chatopera.cc.util.DateConverter;
 import com.chatopera.cc.app.model.Log;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.springframework.context.ApplicationContext;
-import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -103,7 +102,6 @@ public class MainContext {
 
     private static ApplicationContext applicationContext;
 
-    private static ElasticsearchTemplate templet;
 
     public static BlockingQueue<Log> tempLogQueue = new LinkedBlockingQueue<Log>();
 
@@ -851,13 +849,6 @@ public class MainContext {
         return applicationContext;
     }
 
-    public static ElasticsearchTemplate getTemplet() {
-        return templet;
-    }
-
-    public static void setTemplet(ElasticsearchTemplate templet) {
-        MainContext.templet = templet;
-    }
 
     public static int getWebIMPort() {
         return WebIMPort;

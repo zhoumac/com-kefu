@@ -265,7 +265,8 @@ public class AgentController extends Handler {
                     if (MainContext.OnlineUserOperatorStatus.OFFLINE.toString().equals(onlineUser.getStatus())) {
                         onlineUser.setBetweentime((int) (onlineUser.getUpdatetime().getTime() - onlineUser.getLogintime().getTime()));
                     } else {
-                        onlineUser.setBetweentime((int) (System.currentTimeMillis() - onlineUser.getLogintime().getTime()));
+                        long time =onlineUser.getLogintime()==null?0:onlineUser.getLogintime().getTime();
+                        onlineUser.setBetweentime((int) (System.currentTimeMillis() - time));
                     }
                     view.addObject("onlineUser", onlineUser);
                 }

@@ -13,14 +13,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *//*
+
 package com.chatopera.cc.concurrent.dsdata.process;
 
 import java.util.Date;
 import java.util.List;
 
 import com.chatopera.cc.app.basic.MainContext;
-import com.chatopera.cc.app.persistence.es.TopicRepository;
 import com.chatopera.cc.app.persistence.repository.TopicItemRepository;
 import com.chatopera.cc.app.model.Topic;
 import com.chatopera.cc.app.model.TopicItem;
@@ -41,11 +41,13 @@ public class TopicProcess implements JPAProcess{
 		topicRes.save(topic) ;
 		this.process(data, topic.getOrgi());
 	}
-	/**
+	*/
+/**
 	 * 只处理 类似问题
 	 * @param data
 	 * @param orgi
-	 */
+	 *//*
+
 	public void process(Object data , String orgi) {
 		Topic topic = (Topic) data ;
 		if(topic.getSilimar()!=null && topic.getSilimar().size() > 0) {
@@ -75,3 +77,4 @@ public class TopicProcess implements JPAProcess{
 		
 	}
 }
+*/

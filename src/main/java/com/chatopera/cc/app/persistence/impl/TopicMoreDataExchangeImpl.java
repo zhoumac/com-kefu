@@ -18,7 +18,7 @@ package com.chatopera.cc.app.persistence.impl;
 
 import com.chatopera.cc.app.model.TopicItem;
 import com.chatopera.cc.app.persistence.repository.TopicItemRepository;
-import com.chatopera.cc.concurrent.dsdata.process.TopicProcess;
+//import com.chatopera.cc.concurrent.dsdata.process.TopicProcess;
 import com.chatopera.cc.exchange.DataExchangeInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,7 +31,7 @@ public class TopicMoreDataExchangeImpl implements DataExchangeInterface{
 	@Autowired
 	private TopicItemRepository topicItemRes ;
 	
-	private TopicProcess topicProcess = new TopicProcess();
+	//private TopicProcess topicProcess = new TopicProcess();
 
 	@Override
 	public TopicItem getDataByIdAndOrgi(String id, String orgi){
@@ -55,6 +55,6 @@ public class TopicMoreDataExchangeImpl implements DataExchangeInterface{
 
 	@Override
 	public void process(Object data , String orgi) {
-		topicProcess.process(data, orgi);
+		//topicProcess.process(data, orgi);
 	}
 }

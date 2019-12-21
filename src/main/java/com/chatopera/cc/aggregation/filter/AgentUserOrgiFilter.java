@@ -20,10 +20,9 @@ import com.chatopera.cc.app.cache.CacheHelper;
 import com.chatopera.cc.app.model.AgentUser;
 import org.apache.commons.lang.StringUtils;
 
-import com.hazelcast.mapreduce.KeyPredicate;
 
 @SuppressWarnings("deprecation")
-public class AgentUserOrgiFilter implements KeyPredicate<String>{
+public class AgentUserOrgiFilter {
 	/**
 	 * 
 	 */

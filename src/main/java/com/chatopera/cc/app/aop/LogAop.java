@@ -101,9 +101,24 @@ public class LogAop {
 			log.info(" data:"  +"\n"+ JSON.toJSONString(result, SerializerFeature.DisableCircularReferenceDetect));
 			// 获取执行完的时间
 			log.info(" total times:" + (System.currentTimeMillis() - startTime)+"\n");
+			//printPre();
 		}
 	    return result;
 	}
+
+	/**
+	 * 打印调用方法
+	 */
+	 private void printPre(){
+		 StackTraceElement stackTraceElement = Thread.currentThread().getStackTrace()[2];
+		 String className = stackTraceElement.getClassName();//调用的类名
+		 String methodName = stackTraceElement.getMethodName();//调用的方法名
+		 int line = stackTraceElement.getLineNumber();//调用的行数
+		 String fileName = stackTraceElement.getFileName();
+
+		 log.info("methodPre:"  +"\n"+ className+"."+methodName+"\033[32;4m("+fileName+".java:"+line+")"+"\033[0m");
+
+	 }
 
 	 private static class ClassTool {
 

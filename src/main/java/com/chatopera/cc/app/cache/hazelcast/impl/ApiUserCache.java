@@ -16,109 +16,108 @@
  */
 package com.chatopera.cc.app.cache.hazelcast.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.chatopera.cc.app.cache.CacheBean;
-import com.hazelcast.com.eclipsesource.json.JsonObject;
-import com.hazelcast.core.HazelcastInstance;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.concurrent.locks.Lock;
 
 @Service("api_user_cache")
-public class ApiUserCache implements CacheBean{
-	
+public class ApiUserCache  implements CacheBean {
+
 	@Autowired
-	public HazelcastInstance hazelcastInstance;	
-	
-	private String cacheName ; 
-	
-	public HazelcastInstance getInstance(){
-		return hazelcastInstance ;
+	private RedisTemplate redisTemplate;
+
+	private HashOperations getHashOperations(){
+		HashOperations hashOperations = redisTemplate.opsForHash();
+		return hashOperations;
 	}
-	public CacheBean getCacheInstance(String cacheName){
-		this.cacheName = cacheName ;
-		return this ;
-	}
-	
+
+	private String cacheName ;
+
 	@Override
 	public void put(String key, Object value, String orgi) {
-		getInstance().getMap(getName()).put(key, value) ;
+		getHashOperations().put(cacheName,key,value);
 	}
 
 	@Override
 	public void clear(String orgi) {
-		getInstance().getMap(getName()).clear();
+		getHashOperations().delete(cacheName);
 	}
 
 	@Override
 	public Object delete(String key, String orgi) {
-		return getInstance().getMap(getName()).remove(key) ;
+		return 	getHashOperations().delete(cacheName,key);
 	}
 
 	@Override
 	public Object delete(String key) {
-		return getInstance().getMap(getName()).remove(key);
+		return 	getHashOperations().delete(cacheName);
 	}
 
 	@Override
-	public void update(String key, String orgi, Object value) {
-		getInstance().getMap(getName()).put(key, value);
+	public void update(String key, String orgi, Object object) {
+		getHashOperations().put(cacheName,key,object);
 	}
 
 	@Override
 	public Object getCacheObject(String key, String orgi) {
-		return getInstance().getMap(getName()).get(key);
-	}
-
-	public String getName() {
-		return cacheName ;
-	}
-
-//	@Override
-	public void service() throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Collection<?> getAllCacheObject(String orgi) {
-		return getInstance().getMap(getName()).keySet();
-	}
-	@Override
-	public Object getCacheObject(String key, String orgi, Object defaultValue) {
-		return getCacheObject(key, orgi);
-	}
-	@Override
-	public Object getCache() {
-		return getInstance().getMap(cacheName);
-	}
-	
-	@Override
-	public Lock getLock(String lock , String orgi) {
-		// TODO Auto-generated method stub
-		return getInstance().getLock(lock);
-	}
-	@Override
-	public long getSize() {
-		return getInstance().getMap(getName()).size();
-	}
-	@Override
-	public long getAtomicLong(String cacheName) {
-		return getInstance().getAtomicLong(getName()).incrementAndGet();
-	}
-	@Override
-	public void setAtomicLong(String cacheName, long start) {
-		getInstance().getAtomicLong(getName()).set(start);
-	}
-	@Override
-	public JsonObject getStatics() {
-		// TODO Auto-generated method stub
-		return getInstance().getMap(getName()).getLocalMapStats().toJson();
+		return getHashOperations().get(cacheName,key);
 	}
 
 	@Override
 	public Object getCacheObject(String key) {
-		return getInstance().getMap(getName()).get(key);
+		return getHashOperations().get(cacheName,key);
+
+	}
+
+	@Override
+	public Object getCacheObject(String key, String orgi, Object defaultValue) {
+		return getHashOperations().get(cacheName,key);
+
+	}
+
+	@Override
+	public Collection<?> getAllCacheObject(String orgi) {
+
+		Map map = (Map)redisTemplate.opsForHash().keys(cacheName);
+
+		return map.keySet();
+
+	}
+
+	public CacheBean getCacheInstance(String cacheName){
+		this.cacheName = cacheName ;
+		return this ;
+	}
+
+
+
+	@Override
+	public Object getCache() {
+
+		return getHashOperations().entries(cacheName);
+
+	}
+
+	@Override
+	public JSONObject getStatics() {
+
+		return (JSONObject) JSON.parseObject(JSON.toJSONString(getCacheObject(cacheName)));
+	}
+
+	@Override
+	public long getSize() {
+
+		Map map = (Map)redisTemplate.opsForHash().keys(cacheName);
+
+		return map.size();
 	}
 }

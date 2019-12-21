@@ -28,12 +28,7 @@ import javax.persistence.Transient;
 
 import com.chatopera.cc.app.basic.MainUtils;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldIndex;
-import org.springframework.data.elasticsearch.annotations.FieldType;
 
-@Document(indexName = "cskefu", type = "orderscomment")
 @Entity
 @Table(name = "uk_orderscomment")
 @org.hibernate.annotations.Proxy(lazy = false)
@@ -49,7 +44,6 @@ public class OrdersComment implements UKAgg{
 	
 	private Date createtime = new Date() ;
 	
-	@Field(index = FieldIndex.not_analyzed , type = FieldType.String)
 	private String dataid ;
 	
 	private String content ; 	//评论内容

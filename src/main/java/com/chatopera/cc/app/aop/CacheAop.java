@@ -19,15 +19,17 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Aspect
 @Component
 @Slf4j
-@Profile("dev")
+@Profile("dev1")
 public class CacheAop {
 
 	public static Set<String> useCache = Sets.newConcurrentHashSet();
@@ -92,8 +94,23 @@ public class CacheAop {
 			//log.info(" data:"  +"\n"+ JSON.toJSONString(result, SerializerFeature.DisableCircularReferenceDetect));
 			// 获取执行完的时间
 			log.info(" total times:" + (System.currentTimeMillis() - startTime)+"\n");
+			printPre();
 		}
 	    return result;
+	}
+
+	/**
+	 * 打印调用方法
+	 */
+	private void printPre(){
+		StackTraceElement stackTraceElement = Thread.currentThread().getStackTrace()[3];
+		String className = stackTraceElement.getClassName();//调用的类名
+		String methodName = stackTraceElement.getMethodName();//调用的方法名
+		int line = stackTraceElement.getLineNumber();//调用的行数
+		String fileName = stackTraceElement.getFileName();
+
+		log.info("methodPre:"  +"\n"+ className+"."+methodName+"\033[32;4m("+fileName+".java:"+line+")"+"\033[0m");
+
 	}
 
 	 private static class ClassTool {
@@ -113,9 +130,21 @@ public class CacheAop {
 				cc = pool.getOrNull(classPage);
 
 				if(cc!=null&&!resultList.contains(method)) {
+					//判断该类是否有实现的方法
+					Set<CtMethod> ctMethods = Sets.newHashSet(cc.getDeclaredMethods());
+					Set<String> methodStr = ctMethods.stream().map(CtMethod::getName).collect(Collectors.toSet());
+					if (methodStr.contains(method)){
+						CtMethod methodX = cc.getDeclaredMethod(method);
+						return methodX.getMethodInfo().getLineNumber(0);
+					}else{
+						//从父类找到该方法
+						CtClass superclass = cc.getSuperclass();
 
-					CtMethod methodX = cc.getDeclaredMethod(method);
-					return methodX.getMethodInfo().getLineNumber(0);
+						//CtMethod methodX = cc.getMethod(method,null);
+						return 1;
+
+					}
+
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

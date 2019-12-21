@@ -56,7 +56,7 @@ public class StartedEventListener implements ApplicationListener<ContextRefreshe
     	sysDicRes = event.getApplicationContext().getBean(SysDicRepository.class) ;
     	blackListRes = event.getApplicationContext().getBean(BlackListRepository.class) ;
     	List<SysDic> sysDicList = sysDicRes.findAll() ;
-    	
+    	/*
     	for(SysDic dic : sysDicList){
     		CacheHelper.getSystemCacheBean().put(dic.getId(), dic, dic.getOrgi());
 			if(dic.getParentid().equals("0")){
@@ -68,7 +68,7 @@ public class StartedEventListener implements ApplicationListener<ContextRefreshe
 				}
 				CacheHelper.getSystemCacheBean().put(dic.getCode(), sysDicItemList, dic.getOrgi());
 			}
-		}
+		}*/
     	List<BlackEntity> blackList = blackListRes.findByOrgi(MainContext.SYSTEM_ORGI) ;
     	for(BlackEntity black : blackList){
     		if(!StringUtils.isBlank(black.getUserid())) {
@@ -87,9 +87,10 @@ public class StartedEventListener implements ApplicationListener<ContextRefreshe
     	}
     	GenerationRepository generationRes = event.getApplicationContext().getBean(GenerationRepository.class) ;
     	List<Generation> generationList = generationRes.findAll() ;
-    	for(Generation generation : generationList){
+    	//todo zhous
+    	/*for(Generation generation : generationList){
     		CacheHelper.getSystemCacheBean().setAtomicLong(MainContext.ModelType.WORKORDERS.toString(), generation.getStartinx());
-    	}
+    	}*/
     	
     	MainUtils.initSystemArea();
     	

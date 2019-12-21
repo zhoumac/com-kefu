@@ -42,7 +42,7 @@ import com.chatopera.cc.util.mobile.MobileNumberUtils;
 
 @SpringBootApplication
 @EnableJpaRepositories("com.chatopera.cc.app.persistence.repository")
-@EnableElasticsearchRepositories("com.chatopera.cc.app.persistence.es")
+//@EnableElasticsearchRepositories("com.chatopera.cc.app.persistence.es")
 @EnableAsync
 @EnableTransactionManagement
 public class Application {

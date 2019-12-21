@@ -16,7 +16,7 @@
  */
 package com.chatopera.cc.app.cache;
 
-import com.hazelcast.com.eclipsesource.json.JsonObject;
+import com.alibaba.fastjson.JSONObject;
 
 import java.util.Collection;
 import java.util.concurrent.locks.Lock;
@@ -72,14 +72,12 @@ public interface CacheBean {
 	
 	public Object getCache();
 	
-	public JsonObject getStatics();
+	public JSONObject getStatics();
 
-	public Lock getLock(String lock, String orgi);
-	
+
 	public long getSize();
+
 	
-	public long getAtomicLong(String cacheName) ;
-	
-	public void setAtomicLong(String cacheName , long start) ;	//初始化 发号器
+
 	
 }

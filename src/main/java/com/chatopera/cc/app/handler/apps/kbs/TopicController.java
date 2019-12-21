@@ -17,7 +17,6 @@
 
 package com.chatopera.cc.app.handler.apps.kbs;
 
-import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,6 +31,7 @@ import javax.validation.Valid;
 
 import com.chatopera.cc.app.basic.MainContext;
 import com.chatopera.cc.app.basic.MainUtils;
+import com.chatopera.cc.app.persistence.es.TopicRepository;
 import com.chatopera.cc.util.Menu;
 import com.chatopera.cc.exchange.DataExchangeInterface;
 import com.chatopera.cc.concurrent.dsdata.export.ExcelExporterProcess;
@@ -42,7 +42,6 @@ import com.chatopera.cc.app.model.KnowledgeType;
 import com.chatopera.cc.app.model.SysDic;
 import com.chatopera.cc.app.model.Topic;
 import com.chatopera.cc.app.model.TopicItem;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,12 +49,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.chatopera.cc.concurrent.dsdata.process.TopicProcess;
-import com.chatopera.cc.app.persistence.es.TopicRepository;
 import com.chatopera.cc.app.persistence.repository.AreaTypeRepository;
 import com.chatopera.cc.app.persistence.repository.KnowledgeTypeRepository;
 import com.chatopera.cc.app.persistence.repository.MetadataRepository;

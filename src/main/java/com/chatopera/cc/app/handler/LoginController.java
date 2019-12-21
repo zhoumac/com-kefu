@@ -32,7 +32,7 @@ import com.chatopera.cc.app.persistence.repository.UserRoleRepository;
 import com.chatopera.cc.util.ExtUtils;
 import com.chatopera.cc.util.Menu;
 import com.chatopera.cc.util.OnlineUserUtils;
-import com.hazelcast.aws.utility.StringUtil;
+import com.chatopera.cc.util.jeecg.StringUtil;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;

@@ -23,13 +23,13 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
-import com.hazelcast.com.eclipsesource.json.JsonObject;
 import com.chatopera.cc.util.Menu;
 import com.chatopera.cc.app.cache.CacheHelper;
 import com.chatopera.cc.app.handler.Handler;
@@ -63,9 +63,9 @@ public class HazelcastMonitorController extends Handler{
      * @param json
      * @return
      */
-    private Map<String , Object> convert(JsonObject json){
+    private Map<String , Object> convert(JSONObject json){
     	Map<String , Object> values = new HashMap<String , Object>();
-    	for(String key : json.names()){
+    	for(String key : json.keySet()){
     		values.put(key, json.get(key)) ;
     	}
     	return values;

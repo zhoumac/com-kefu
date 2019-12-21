@@ -47,7 +47,6 @@ import com.chatopera.cc.app.model.UploadStatus;
 import com.chatopera.cc.app.model.User;
 import com.chatopera.cc.app.model.UserHistory;
 import com.chatopera.cc.app.persistence.blob.JpaBlobHelper;
-import com.chatopera.cc.app.persistence.es.ContactsRepository;
 import com.chatopera.cc.app.persistence.impl.UserService;
 import com.chatopera.cc.app.persistence.repository.AgentServiceSatisRepository;
 import com.chatopera.cc.app.persistence.repository.AgentStatusRepository;
@@ -75,7 +74,7 @@ import com.chatopera.cc.util.Menu;
 import com.chatopera.cc.util.OnlineUserUtils;
 import com.chatopera.cc.util.StreamingFileUtils;
 import com.chatopera.cc.util.WebIMClient;
-import com.hazelcast.aws.utility.StringUtil;
+import com.chatopera.cc.util.jeecg.StringUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.RandomUtils;
@@ -151,8 +150,7 @@ public class IMController extends Handler {
 	private LeaveMsgRepository leaveMsgRes;
 	@Autowired
 	private AttachmentRepository attachementRes;
-	@Autowired
-	private ContactsRepository contactsRes;
+
 	@Autowired
 	private AgentUserContactsRepository agentUserContactsRes;
 	@Autowired
@@ -460,8 +458,10 @@ public class IMController extends Handler {
 		//////////----->传递askType,确认是否为支付相关咨询    by Wayne on 2019/9/10 13:38   start--->
 		request.setAttribute("chatType", chatType);
 		//////////<-----传递askType,确认是否为支付相关咨询    by Wayne on 2019/9/10 13:38    <---end
-		BlackEntity black = (BlackEntity) CacheHelper.getSystemCacheBean().getCacheObject(userid,
+		Object cacheObject = CacheHelper.getSystemCacheBean().getCacheObject(userid,
 				MainContext.SYSTEM_ORGI);
+
+		BlackEntity black = JSON.parseObject(JSON.toJSONString(cacheObject),BlackEntity.class);
 		if (StringUtils.isNotBlank(appid)
 				&& (black == null || (black.getEndtime() != null && black.getEndtime().before(new Date())))) {
 			CousultInvite invite = OnlineUserUtils.cousult(appid, orgi, inviteRepository);
@@ -814,14 +814,15 @@ public class IMController extends Handler {
 				if (StringUtils.isNotBlank(contacts.getEmail())) {
 					query.append(" OR ").append(contacts.getEmail());
 				}
-				Page<Contacts> contactsList = contactsRes.findByOrgi(orgi, false, query.toString(),
+				/*Page<Contacts> contactsList = contactsRes.findByOrgi(orgi, false, query.toString(),
 						new PageRequest(0, 1));
 				if (contactsList.getContent().size() > 0) {
 					contacts = contactsList.getContent().get(0);
 				} else {
 					// contactsRes.save(contacts) ; //需要增加签名验证，避免随便产生垃圾信息，也可以自行修改？
-					contacts.setId(null);
-				}
+
+				}*/
+				contacts.setId(null);
 			} else {
 				contacts.setId(null);
 			}
@@ -841,7 +842,7 @@ public class IMController extends Handler {
 				List<AgentUserContacts> agentUserContactsList = agentUserContactsRes.findByUseridAndOrgi(userid, orgi);
 				if (agentUserContactsList.size() > 0) {
 					AgentUserContacts agentUserContacts = agentUserContactsList.get(0);
-					contacts = contactsRes.findOne(agentUserContacts.getContactsid());
+					//contacts = contactsRes.findOne(agentUserContacts.getContactsid());
 				}
 			}
 		}

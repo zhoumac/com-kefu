@@ -50,8 +50,6 @@ import com.chatopera.cc.app.persistence.repository.UserRepository;
 import com.chatopera.cc.app.persistence.repository.UserRoleRepository;
 import com.chatopera.cc.util.ExtUtils;
 import com.chatopera.cc.util.Menu;
-import com.hazelcast.aws.utility.StringUtil;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 

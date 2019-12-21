@@ -117,7 +117,6 @@ public class AgentUser implements Serializable, Comparable<AgentUser> {
     private String agentservice;
 
     public AgentUser() {
-        log.info("开始注入use 对象！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！");
 
     }
 

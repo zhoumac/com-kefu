@@ -16,6 +16,7 @@
  */
 package com.chatopera.cc.util;
 
+import com.alibaba.fastjson.JSON;
 import com.chatopera.cc.app.algorithm.AutomaticServiceDist;
 import com.chatopera.cc.app.basic.MainContext;
 import com.chatopera.cc.app.basic.MainUtils;
@@ -824,7 +825,9 @@ public class OnlineUserUtils {
 
         CousultInvite invite = OnlineUserUtils.cousult(appid, orgi, MainContext.getContext().getBean(ConsultInviteRepository.class));
         if (invite != null && !invite.isTraceuser()) {
-            OnlineUser onlineUser = (OnlineUser) CacheHelper.getOnlineUserCacheBean().getCacheObject(user, orgi);
+            Object userCache = CacheHelper.getOnlineUserCacheBean().getCacheObject(user, orgi);
+            OnlineUser onlineUser =   JSON.parseObject(JSON.toJSONString(userCache),OnlineUser.class);
+
             if (onlineUser != null) {
                 OnlineUserRepository onlineUserRes = MainContext.getContext().getBean(OnlineUserRepository.class);
                 if (onlineUserRes.countByUseridAndOrgi(user, orgi) == 0) {

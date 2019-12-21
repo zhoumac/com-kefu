@@ -18,10 +18,8 @@ package com.chatopera.cc.aggregation.filter;
 
 import com.chatopera.cc.app.cache.CacheHelper;
 import com.chatopera.cc.app.model.AgentStatus;
-import com.hazelcast.mapreduce.KeyPredicate;
-
 @SuppressWarnings("deprecation")
-public class AgentStatusBusyFilter implements KeyPredicate<String> {
+public class AgentStatusBusyFilter  {
 	/**
 	 * 
 	 */

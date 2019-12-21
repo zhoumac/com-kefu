@@ -13,10 +13,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *//*
+
 package com.chatopera.cc.concurrent.dsdata.process;
 
-import com.chatopera.cc.app.persistence.es.ContactsRepository;
 import com.chatopera.cc.app.model.Contacts;
 
 public class ContactsProcess implements JPAProcess{
@@ -38,3 +38,4 @@ public class ContactsProcess implements JPAProcess{
 	}
 
 }
+*/

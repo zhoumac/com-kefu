@@ -45,7 +45,6 @@ import org.hibernate.jdbc.Work;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -293,10 +292,7 @@ public class MetadataController extends Handler{
     			SysDic dic = UKeFuDic.getInstance().getDicItem(table.getListblocktemplet()) ;
     			if(dic!=null) {
 	    			Object bean = MainContext.getContext().getBean(Class.forName(dic.getCode())) ;
-	    			if(bean instanceof ElasticsearchRepository) {
-	    				ElasticsearchRepository<?, ?> jpa = (ElasticsearchRepository<?, ?>)bean ;
-	    				jpa.deleteAll(); 
-	    			}
+
     			}
     		}
     	}
@@ -314,20 +310,7 @@ public class MetadataController extends Handler{
     			
     			if(dic!=null) {
 	    			Object bean = MainContext.getContext().getBean(Class.forName(dic.getCode())) ;
-	    			if(bean instanceof ElasticsearchRepository) {
-	    				ElasticsearchRepository jpa = (ElasticsearchRepository)bean ;
-	    				if(!StringUtils.isBlank(table.getPreviewtemplet())) {
-	    					SysDic jpaDic = UKeFuDic.getInstance().getDicItem(table.getPreviewtemplet()) ;
-	    					List dataList = service.list(jpaDic.getCode()) ;
-	    					List values = new UKeFuList();
-	    					for(Object object : dataList) {
-	    						values.add(object) ;
-	    					}
-	    					if(dataList.size() > 0) {
-	    						jpa.save(values) ;
-	    					}
-	    				}
-	    			}
+
     			}
     		}
     	}
@@ -345,16 +328,7 @@ public class MetadataController extends Handler{
     			
     			if(dic!=null) {
 	    			Object bean = MainContext.getContext().getBean(Class.forName(dic.getCode())) ;
-	    			if(bean instanceof ElasticsearchRepository) {
-	    				ElasticsearchRepository jpa = (ElasticsearchRepository)bean ;
-	    				if(!StringUtils.isBlank(table.getPreviewtemplet())) {
-	    					Iterable dataList = jpa.findAll();
-	    					for(Object object : dataList) {
-	    						service.delete(object);
-	    						service.save(object);
-	    					}
-	    				}
-	    			}
+
     			}
     		}
     	}

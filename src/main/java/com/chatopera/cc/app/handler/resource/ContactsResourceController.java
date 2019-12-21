@@ -19,6 +19,7 @@ package com.chatopera.cc.app.handler.resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import com.chatopera.cc.app.persistence.es.ContactsRepository;
 import com.chatopera.cc.util.Menu;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -27,7 +28,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.chatopera.cc.app.persistence.es.ContactsRepository;
 import com.chatopera.cc.app.handler.Handler;
 
 @Controller

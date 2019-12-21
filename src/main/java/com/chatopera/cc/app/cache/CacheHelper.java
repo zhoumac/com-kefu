@@ -16,8 +16,11 @@
  */
 package com.chatopera.cc.app.cache;
 
+import com.chatopera.cc.app.aop.util.PrintLog;
 import com.chatopera.cc.app.cache.hazelcast.HazlcastCacheHelper;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class CacheHelper {
 	private static CacheHelper instance = new CacheHelper();
 	
@@ -33,6 +36,7 @@ public class CacheHelper {
 		return cacheInstance!=null ? cacheInstance.getAgentStatusCacheBean() : null;
 	}
 	public static CacheBean getAgentUserCacheBean() {
+
 		return cacheInstance!=null ? cacheInstance.getAgentUserCacheBean() : null ;
 	}
 	public static CacheBean getOnlineUserCacheBean() {
@@ -43,6 +47,7 @@ public class CacheHelper {
 	}
 
 	public static CacheBean getApiUserCacheBean() {
+
 		return cacheInstance!=null ? cacheInstance.getApiUserCacheBean() : null ;
 	}
 

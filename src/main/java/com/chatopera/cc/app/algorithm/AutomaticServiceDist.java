@@ -16,6 +16,8 @@
  */
 package com.chatopera.cc.app.algorithm;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.chatopera.cc.aggregation.filter.AgentStatusBusyFilter;
 import com.chatopera.cc.aggregation.filter.AgentStatusOrgiFilter;
 import com.chatopera.cc.aggregation.filter.AgentUserOrgiFilter;
@@ -28,19 +30,15 @@ import com.chatopera.cc.app.model.*;
 import com.chatopera.cc.app.persistence.repository.*;
 import com.chatopera.cc.util.WebIMReport;
 import com.corundumstudio.socketio.SocketIONamespace;
-import com.hazelcast.core.IMap;
-import com.hazelcast.mapreduce.aggregation.Aggregations;
-import com.hazelcast.mapreduce.aggregation.Supplier;
-import com.hazelcast.query.PagingPredicate;
-import com.hazelcast.query.SqlPredicate;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.locks.Lock;
+import java.util.*;
+
+import java.util.stream.Collectors;
 
 /**
  * Automatic Call Distribution
@@ -68,8 +66,12 @@ public class AutomaticServiceDist {
 //                CacheHelper.getSystemCacheBean().put(MainContext.SYSTEM_CACHE_SESSION_CONFIG + "_" + orgi, sessionConfig, orgi);
 //            }
 //        }
-	    if (MainContext.getContext() != null && (sessionConfig = (SessionConfig) CacheHelper.getSystemCacheBean().getCacheObject(MainContext.SYSTEM_CACHE_SESSION_CONFIG)) == null) {
+         sessionConfig = (SessionConfig)CacheHelper.getSystemCacheBean().getCacheObject(MainContext.SYSTEM_CACHE_SESSION_CONFIG);
+
+        if (MainContext.getContext() != null &&
+                Objects.isNull(sessionConfig)){
             SessionConfigRepository sessionConfigRes = MainContext.getContext().getBean(SessionConfigRepository.class);
+
 		    final List<SessionConfig> sessionConfigList = sessionConfigRes.findAll();
 		    if (sessionConfigList != null && sessionConfigList.size() > 0) {
 			    CacheHelper.getSystemCacheBean().put(MainContext.SYSTEM_CACHE_SESSION_CONFIG, sessionConfigList.get(0), orgi);
@@ -79,7 +81,6 @@ public class AutomaticServiceDist {
         }
 
 	    //////////<-----不考虑orgi    by Wayne on 2019/9/19 19:49    <---end
-
         return sessionConfig;
     }
 
@@ -109,35 +110,80 @@ public class AutomaticServiceDist {
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static AgentReport getAgentReport(String orgi) {
+
+        System.out.println("orgi!!!!!!!!!!!!"+orgi);
         /**
          * 统计当前在线的坐席数量
          */
         AgentReport report = new AgentReport();
-        IMap agentStatusMap = (IMap<String, Object>) CacheHelper.getAgentStatusCacheBean().getCache();
+        Object cache = CacheHelper.getAgentStatusCacheBean().getCache();
+        System.out.println("当前服务缓存"+JSON.toJSONString(cache));
+
+        Map<String,AgentStatus> agentStatusMap = (Map<String, AgentStatus>) cache;
 
         //////////----->不考虑orgi    by Wayne on 2019/9/10 15:47   start--->
         orgi = null;
         AgentStatusOrgiFilter filter = new AgentStatusOrgiFilter(orgi);
         //////////<-----不考虑orgi    by Wayne on 2019/9/10 15:47    <---end
 
-//        Long agents = (Long) agentStatusMap.aggregate(Supplier.fromKeyPredicate(filter), Aggregations.count());
-        Long agents = (Long) agentStatusMap.aggregate(Supplier.all(), Aggregations.count());
-        report.setAgents(agents.intValue());
+       // Long agents = (Long) agentStatusMap.aggregate(Supplier.all(), Aggregations.count());
+        report.setAgents(agentStatusMap.size());
 
-        Long busyAgent = (Long) agentStatusMap.aggregate(Supplier.fromKeyPredicate(new AgentStatusBusyFilter()), Aggregations.count());
-//        Long busyAgent = (Long) agentStatusMap.aggregate(Supplier.all(), Aggregations.count());
-        report.setBusy(busyAgent.intValue());
+       //Long busyAgent = (Long) agentStatusMap.aggregate(Supplier.fromKeyPredicate(new AgentStatusBusyFilter()), Aggregations.count());
+        long countBusy = agentStatusMap.values().stream()
+                .filter(a -> {
+                    return a != null && a.isBusy();
+                }).count();
+
+        report.setBusy((int) countBusy);
         report.setOrgi(orgi);
 
         /**
          * 统计当前服务中的用户数量
          */
-        IMap agentUserMap = (IMap<String, Object>) CacheHelper.getAgentUserCacheBean().getCache();
-        Long users = (Long) agentUserMap.aggregate(Supplier.fromKeyPredicate(new AgentUserOrgiFilter(orgi, MainContext.AgentUserStatusEnum.INSERVICE.toString())), Aggregations.count());
-        report.setUsers(users.intValue());
+        Object cacheUser = CacheHelper.getAgentStatusCacheBean().getCache();
+        //IMap agentUserMap = JSON.parseObject(JSON.toJSONString(cache), IMap.class);
+        System.out.println("统计当前服务中的用户数量"+JSON.toJSONString(cache));
+        Map<String,AgentStatus> agentUserMap = (Map<String, AgentStatus>)cacheUser;
 
-        Long queneUsers = (Long) agentUserMap.aggregate(Supplier.fromKeyPredicate(new AgentUserOrgiFilter(orgi, MainContext.AgentUserStatusEnum.INQUENE.toString())), Aggregations.count());
-        report.setInquene(queneUsers.intValue());
+        int userNum =0;
+        int queneNum=0;
+        if(!CollectionUtils.isEmpty(agentUserMap)) {
+            userNum = agentUserMap.values().stream()
+                    .filter(a -> {
+                        System.out.println(a.getUsername()+"服务数量："+a.getUsers());
+                        return a != null && a.isBusy();
+                    }).map(a -> a.getUsers()).reduce(0, Integer::sum);
+        }
+
+        Map<String,AgentUser> map = ( Map<String,AgentUser>) CacheHelper
+                .getAgentUserCacheBean().getCache();
+
+
+        for (AgentUser user:map.values()) {
+           boolean b =  user!=null && user.getStatus()!=null && user.getStatus()!=null;
+            System.out.println(user.getUsername()+"  "+user.getStatus());
+           if(b){
+               if(user.getStatus().equals(MainContext.AgentUserStatusEnum.INSERVICE.toString())){
+                   userNum++;
+               }
+               if(user.getStatus().equals(MainContext.AgentUserStatusEnum.INQUENE.toString())){
+                   queneNum++;
+               }
+           }
+        }
+        System.out.println("userNum"+userNum);
+        System.out.println("queneNum"+queneNum);
+        //AgentUser
+
+       // boolean b = user!=null && user.getStatus()!=null && !StringUtils.isBlank(orgi) && orgi.equals(user.getOrgi()) && user.getStatus()!=null && user.getStatus().equals(status);
+
+
+       // Long users = (Long) agentUserMap.aggregate(Supplier.fromKeyPredicate(new AgentUserOrgiFilter(orgi, MainContext.AgentUserStatusEnum.INSERVICE.toString())), Aggregations.count());
+        report.setUsers((int)userNum);
+
+       // Long queneUsers = (Long) agentUserMap.aggregate(Supplier.fromKeyPredicate(new AgentUserOrgiFilter(orgi, MainContext.AgentUserStatusEnum.INQUENE.toString())), Aggregations.count());
+        report.setInquene(queneNum);
 
         return report;
     }
@@ -160,15 +206,25 @@ public class AutomaticServiceDist {
 
         int queneUsers = 0;
 
-        PagingPredicate<String, AgentUser> pagingPredicate = null;
+      /*  PagingPredicate<String, AgentUser> pagingPredicate = null;
         if (StringUtils.isNotBlank(skill)) {
             pagingPredicate = new PagingPredicate<String, AgentUser>(new SqlPredicate("status = 'inquene' AND skill = '" + skill + "'  AND orgi = '" + orgi + "'"), 100);
         } else if (StringUtils.isNotBlank(agent)) {
             pagingPredicate = new PagingPredicate<String, AgentUser>(new SqlPredicate("status = 'inquene' AND agent = '" + agent + "' AND orgi = '" + orgi + "'"), 100);
         } else {
             pagingPredicate = new PagingPredicate<String, AgentUser>(new SqlPredicate("status = 'inquene' AND orgi = '" + orgi + "'"), 100);
-        }
-        queneUsers = ((IMap<String, AgentUser>) CacheHelper.getAgentUserCacheBean().getCache()).values(pagingPredicate).size();
+        }*/
+
+
+        Map<String,AgentUser> cache = ( Map<String,AgentUser>) CacheHelper
+                .getAgentUserCacheBean().getCache();
+
+        System.out.println("队列缓存"+JSON.toJSONString(cache));
+        queneUsers = (int) cache.values().stream().filter(user -> {
+                return user!=null && user.getStatus()!=null && !StringUtils.isBlank(orgi) && orgi.equals(user.getOrgi()) && user.getStatus()!=null && user.getStatus().equals(MainContext.AgentUserStatusEnum.INQUENE.toString());
+
+    }).count();
+        //queneUsers = ((IMap<String, AgentUser>) CacheHelper.getAgentUserCacheBean().getCache()).values(pagingPredicate).size();
         return queneUsers;
     }
 
@@ -177,41 +233,63 @@ public class AutomaticServiceDist {
         /**
          * agentno自动是 服务的坐席， agent 是请求的坐席
          */
-        PagingPredicate<String, AgentUser> pagingPredicate = new PagingPredicate<String, AgentUser>(new SqlPredicate("status = 'inservice' AND agentno = '" + agent + "'  AND orgi = '" + orgi + "'"), 100);
+       // PagingPredicate<String, AgentUser> pagingPredicate = new PagingPredicate<String, AgentUser>(new SqlPredicate("status = 'inservice' AND agentno = '" + agent + "'  AND orgi = '" + orgi + "'"), 100);
         List<AgentUser> agentUserList = new ArrayList<AgentUser>();
-        agentUserList.addAll(((IMap<String, AgentUser>) CacheHelper.getAgentUserCacheBean().getCache()).values(pagingPredicate));
-        return agentUserList.size();
+        //agentUserList.addAll(((IMap<String, AgentUser>) CacheHelper.getAgentUserCacheBean().getCache()).values(pagingPredicate));
+        Map<String,AgentUser> cache = ( Map<String,AgentUser>) CacheHelper
+                .getAgentUserCacheBean().getCache();
+
+        System.out.println("user缓存对象"+JSON.toJSONString(cache));
+        return (int) cache.values().stream().filter(user -> {
+            return user!=null && user.getStatus()!=null && !StringUtils.isBlank(orgi) && orgi.equals(user.getOrgi()) && user.getStatus()!=null && user.getStatus().equals(MainContext.AgentUserStatusEnum.INSERVICE.toString());
+
+        }).count();
     }
 
 
     @SuppressWarnings("unchecked")
     public static List<AgentStatus> getAgentStatus(String skill, String orgi) {
-        PagingPredicate<String, AgentStatus> pagingPredicate = new PagingPredicate<String, AgentStatus>(new SqlPredicate("orgi = '" + orgi + "'"), 100);
+    /*    PagingPredicate<String, AgentStatus> pagingPredicate = new PagingPredicate<String, AgentStatus>(new SqlPredicate("orgi = '" + orgi + "'"), 100);
 
         if (StringUtils.isNotBlank(skill)) {
             pagingPredicate = new PagingPredicate<String, AgentStatus>(new SqlPredicate("skill = '" + skill + "' AND orgi = '" + orgi + "'"), 100);
         }
         List<AgentStatus> agentList = new ArrayList<AgentStatus>();
-        agentList.addAll(((IMap<String, AgentStatus>) CacheHelper.getAgentStatusCacheBean().getCache()).values(pagingPredicate));
-        return agentList;
+        agentList.addAll(((IMap<String, AgentStatus>) CacheHelper.getAgentStatusCacheBean().getCache()).values(pagingPredicate));*/
+        Map<String,AgentStatus> cache = ( Map<String,AgentStatus>) CacheHelper
+                .getAgentStatusCacheBean().getCache();
+
+        return cache.values().stream().filter(
+                a->{
+                    return  a.getOrgi().equals(orgi);
+                }
+        ).collect(Collectors.toList());
     }
 
     /**
      * 为坐席批量分配用户
      *
-     * @param agentStatus
+     * @param
      */
     @SuppressWarnings("unchecked")
     public static void allotAgent(String agentno, String orgi) {
         AgentStatus agentStatus = (AgentStatus) CacheHelper.getAgentStatusCacheBean().getCacheObject(agentno, orgi);
+        System.out.println("作息状态"+JSON.toJSONString(agentStatus));
         List<AgentUser> agentStatusList = new ArrayList<AgentUser>();
-        PagingPredicate<String, AgentUser> pagingPredicate = null;
+       /* PagingPredicate<String, AgentUser> pagingPredicate = null;
         if (agentStatus != null && StringUtils.isNotBlank(agentStatus.getSkill())) {
             pagingPredicate = new PagingPredicate<String, AgentUser>(new SqlPredicate("status = 'inquene' AND ((agent = null AND skill = null) OR (skill = '" + agentStatus.getSkill() + "' AND agent = null) OR agent = '" + agentno + "') AND orgi = '" + orgi + "'"), 10);
         } else {
             pagingPredicate = new PagingPredicate<String, AgentUser>(new SqlPredicate("status = 'inquene' AND ((agent = null AND skill = null) OR agent = '" + agentno + "') AND orgi = '" + orgi + "'"), 10);
-        }
-        agentStatusList.addAll(((IMap<String, AgentUser>) CacheHelper.getAgentUserCacheBean().getCache()).values(pagingPredicate));
+        }*/
+        Map<String,AgentUser> cache = ( Map<String,AgentUser>) CacheHelper
+                .getAgentUserCacheBean().getCache();
+
+        System.out.println("分配作息缓存"+JSON.toJSONString(cache));
+        agentStatusList.addAll(cache.values().stream().filter(a->{
+            return "inquene".equals(a.getStatus())&& a.getOrgi().equals(orgi);
+        }).collect(Collectors.toList()));
+        //agentStatusList.addAll(((IMap<String, AgentUser>) CacheHelper.getAgentUserCacheBean().getCache()).values(pagingPredicate));
         for (AgentUser agentUser : agentStatusList) {
             SessionConfig sessionConfig = AutomaticServiceDist.initSessionConfig(orgi);
             long maxusers = sessionConfig != null ? sessionConfig.getMaxuser() : MainContext.AGENT_STATUS_MAX_USER;
@@ -249,7 +327,7 @@ public class AutomaticServiceDist {
     /**
      * 为坐席批量分配用户
      *
-     * @param agentStatus
+     * @param
      * @throws Exception
      */
     //////////----->忽略orgi    by Wayne on 2019/9/20 19:57   start--->
@@ -263,6 +341,7 @@ public class AutomaticServiceDist {
 
 
 //            CacheHelper.getAgentUserCacheBean().delete(agentUser.getUserid(), orgi);
+
 	        CacheHelper.getAgentUserCacheBean().delete(agentUser.getUserid());
 
 
@@ -402,7 +481,7 @@ public class AutomaticServiceDist {
     public synchronized static void updateAgentStatus(AgentStatus agentStatus, AgentUser agentUser, String orgi, boolean in) {
         int users = getAgentUsers(agentStatus.getAgentno(), orgi);
         //todo 去掉分布式锁
-        Lock lock = CacheHelper.getAgentStatusCacheBean().getLock("LOCK", orgi);
+       /* Lock lock = CacheHelper.getAgentStatusCacheBean().getLock("LOCK", orgi);
         lock.lock();
         try {
             agentStatus.setUsers(users);
@@ -410,8 +489,9 @@ public class AutomaticServiceDist {
             CacheHelper.getAgentStatusCacheBean().put(agentStatus.getAgentno(), agentStatus, orgi);
         } finally {
             lock.unlock();
-        }
-
+        }*/
+        agentStatus.setUsers(users);
+        agentStatus.setUpdatetime(new Date());
         agentStatus.setUsers(users);
         agentStatus.setUpdatetime(new Date());
         CacheHelper.getAgentStatusCacheBean().put(agentStatus.getAgentno(), agentStatus, orgi);
@@ -484,26 +564,38 @@ public class AutomaticServiceDist {
          */
 
         List<AgentStatus> agentStatusList = new ArrayList<AgentStatus>();
-        PagingPredicate<String, AgentStatus> pagingPredicate = null;
+        //PagingPredicate<String, AgentStatus> pagingPredicate = null;
         /**
          * 处理ACD 的 技能组请求和 坐席请求
          */
+        Map<String, AgentStatus> maps =  (Map<String, AgentStatus>) CacheHelper.getAgentStatusCacheBean().getCache();
+        List  list= null;
         //////////----->加入没传特定的客服过来,就在所有客服里选    by Wayne on 2019/9/17 11:06   start--->
         if (StringUtils.isBlank(orgi)) {
             if (StringUtils.isNotBlank(agentUser.getAgent())) {
-                pagingPredicate = new PagingPredicate<String, AgentStatus>(new SqlPredicate(" busy = false AND agentno = '" + agentUser.getAgent() + "'"), 1);
+               // pagingPredicate = new PagingPredicate<String, AgentStatus>(new SqlPredicate(" busy = false AND agentno = '" + agentUser.getAgent() + "'"), 1);
             } else if (StringUtils.isNotBlank(agentUser.getSkill())) {
-                pagingPredicate = new PagingPredicate<String, AgentStatus>(new SqlPredicate(" busy = false AND skill = '" + agentUser.getSkill() + "'"), 1);
-            } else {
-                pagingPredicate = new PagingPredicate<String, AgentStatus>(new SqlPredicate(" busy = false "), 1);
+               // pagingPredicate = new PagingPredicate<String, AgentStatus>(new SqlPredicate(" busy = false AND skill = '" + agentUser.getSkill() + "'"), 1);
+            } else {//未选择客服进入
+            list = maps.values().stream().filter(a->{
+                return !a.isBusy();
+            }).collect(Collectors.toList());
+               // pagingPredicate = new PagingPredicate<String, AgentStatus>(new SqlPredicate(" busy = false "), 1);
             }
         } else {
             if (StringUtils.isNotBlank(agentUser.getAgent())) {
-                pagingPredicate = new PagingPredicate<String, AgentStatus>(new SqlPredicate(" busy = false AND agentno = '" + agentUser.getAgent() + "' AND orgi = '" + orgi + "'"), 1);
+               // pagingPredicate = new PagingPredicate<String, AgentStatus>(new SqlPredicate(" busy = false AND agentno = '" + agentUser.getAgent() + "' AND orgi = '" + orgi + "'"), 1);
             } else if (StringUtils.isNotBlank(agentUser.getSkill())) {
-                pagingPredicate = new PagingPredicate<String, AgentStatus>(new SqlPredicate(" busy = false AND skill = '" + agentUser.getSkill() + "' AND orgi = '" + orgi + "'"), 1);
-            } else {
-                pagingPredicate = new PagingPredicate<String, AgentStatus>(new SqlPredicate(" busy = false AND orgi = '" + orgi + "'"), 1);
+                //支付进入
+                list = maps.values().stream().filter(a->{
+                    return !a.isBusy()&&a.getSkill().equals(agentUser.getSkill())&&a.getOrgi().equals(orgi);
+                }).collect(Collectors.toList());
+               // pagingPredicate = new PagingPredicate<String, AgentStatus>(new SqlPredicate(" busy = false AND skill = '" + agentUser.getSkill() + "' AND orgi = '" + orgi + "'"), 1);
+            } else {//其他进入
+                list = maps.values().stream().filter(a->{
+                    return !a.isBusy()&&a.getOrgi().equals(orgi);
+                }).collect(Collectors.toList());
+               // pagingPredicate = new PagingPredicate<String, AgentStatus>(new SqlPredicate(" busy = false AND orgi = '" + orgi + "'"), 1);
             }
         }
         //////////<-----加入没传特定的客服过来,就在所有客服里选    by Wayne on 2019/9/17 11:06    <---end
@@ -515,7 +607,10 @@ public class AutomaticServiceDist {
 //            pagingPredicate = new PagingPredicate<String, AgentStatus>(new SqlPredicate(" busy = false AND orgi = '" + orgi + "'"), 1);
 //        }
 
-        agentStatusList.addAll(((IMap<String, AgentStatus>) CacheHelper.getAgentStatusCacheBean().getCache()).values(pagingPredicate));
+        agentStatusList.addAll(list);
+        Object usercache = CacheHelper.getAgentStatusCacheBean().getCache();
+        System.out.println("加入缓存"+JSON.toJSONString(usercache));
+
         AgentStatus agentStatus = null;
         AgentService agentService = null;    //放入缓存的对象
         if (agentStatusList.size() > 0) {
@@ -835,7 +930,7 @@ public class AutomaticServiceDist {
 
 
     /**
-     * @param agentStatus
+     * @param
      * @return
      */
     public static String getSuccessMessage(AgentService agentService, String channel, String orgi) {
@@ -852,7 +947,7 @@ public class AutomaticServiceDist {
     }
 
     /**
-     * @param agentStatus
+     * @param
      * @return
      */
     public static String getServiceFinishMessage(String channel, String orgi) {
@@ -898,7 +993,7 @@ public class AutomaticServiceDist {
      * 坐席离线
      *
      * @param userid
-     * @param status
+     * @param
      */
     public static void deleteAgentStatus(String userid, String orgi, boolean isAdmin) {
         AgentStatusRepository agentStatusRes = MainContext.getContext().getBean(AgentStatusRepository.class);

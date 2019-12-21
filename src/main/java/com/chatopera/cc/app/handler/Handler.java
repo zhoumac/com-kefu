@@ -26,14 +26,10 @@ import com.chatopera.cc.app.persistence.blob.JpaBlobHelper;
 import com.chatopera.cc.app.persistence.repository.OnlineUserRepository;
 import com.chatopera.cc.app.persistence.repository.StreamingFileRepository;
 import com.chatopera.cc.app.persistence.repository.TenantRepository;
-import com.chatopera.cc.app.persistence.repository.UserRepository;
+
 import com.chatopera.cc.exception.CSKefuException;
 import org.apache.commons.lang.StringUtils;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.query.QueryStringQueryBuilder;
-import org.elasticsearch.index.query.QueryStringQueryBuilder.Operator;
-import org.elasticsearch.index.query.RangeQueryBuilder;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,8 +44,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.text.ParseException;
 
-import static org.elasticsearch.index.query.QueryBuilders.termQuery;
-import static org.elasticsearch.index.query.QueryBuilders.termsQuery;
 
 
 @Controller
@@ -102,177 +96,6 @@ public class Handler {
             user.setSessionid(user.getId());
         }
         return user;
-    }
-
-    /**
-     * 构建ElasticSearch基于部门查询的Filter
-     *
-     * @param request
-     * @param boolQueryBuilder
-     * @return
-     * @throws CSKefuException
-     */
-    public boolean esOrganFilter(final HttpServletRequest request, final BoolQueryBuilder boolQueryBuilder) throws CSKefuException {
-        // 组合部门条件
-        User u = getUser(request);
-        if (u == null) {
-            throw new CSKefuException("[esOrganFilter] 未能获取到登录用户。");
-        } else if (u.isSuperuser()) {
-            // 超级管理员, 查看任何数据
-            return true;
-        } else if (u.getMyorgans().size() == 0) {
-            // 用户没有被分配到部门，返回空数据
-            return false;
-        } else {
-            // 用户在部门中，通过部门过滤数据
-            String[] values = u.getMyorgans().toArray(new String[u.getMyorgans().size()]);
-            boolQueryBuilder.filter(termsQuery("organ", values));
-            return true;
-        }
-    }
-
-    /**
-     * @param queryBuilder
-     * @param request
-     */
-    public BoolQueryBuilder search(BoolQueryBuilder queryBuilder, ModelMap map, HttpServletRequest request) {
-        queryBuilder.must(termQuery("orgi", this.getOrgi(request)));
-
-        //搜索框
-        if (StringUtils.isNotBlank(request.getParameter("q"))) {
-            String q = request.getParameter("q");
-            q = q.replaceAll("(OR|AND|NOT|:|\\(|\\))", "");
-            if (StringUtils.isNotBlank(q)) {
-                queryBuilder.must(QueryBuilders.boolQuery().must(new QueryStringQueryBuilder(q).defaultOperator(Operator.AND)));
-                map.put("q", q);
-            }
-        }
-
-        //筛选表单
-        if (StringUtils.isNotBlank(request.getParameter("filterid"))) {
-            queryBuilder.must(termQuery("filterid", request.getParameter("filterid")));
-            map.put("filterid", request.getParameter("filterid"));
-        }
-
-        //批次
-        if (StringUtils.isNotBlank(request.getParameter("batid"))) {
-            queryBuilder.must(termQuery("batid", request.getParameter("batid")));
-            map.put("batid", request.getParameter("batid"));
-        }
-
-        //活动
-        if (StringUtils.isNotBlank(request.getParameter("actid"))) {
-            queryBuilder.must(termQuery("actid", request.getParameter("actid")));
-            map.put("actid", request.getParameter("actid"));
-        }
-
-        //业务状态
-        if (StringUtils.isNotBlank(request.getParameter("workstatus"))) {
-            queryBuilder.must(termQuery("workstatus", request.getParameter("workstatus")));
-            map.put("workstatus", request.getParameter("workstatus"));
-        }
-
-        //拨打状态
-        if (StringUtils.isNotBlank(request.getParameter("callstatus"))) {
-            queryBuilder.must(termQuery("callstatus", request.getParameter("callstatus")));
-            map.put("callstatus", request.getParameter("callstatus"));
-        }
-
-        //预约状态
-        if (StringUtils.isNotBlank(request.getParameter("apstatus"))) {
-            queryBuilder.must(termQuery("apstatus", request.getParameter("apstatus")));
-            map.put("apstatus", request.getParameter("apstatus"));
-        }
-
-        RangeQueryBuilder rangeQuery = null;
-        //拨打时间区间查询
-        if (StringUtils.isNotBlank(request.getParameter("callbegin")) || StringUtils.isNotBlank(request.getParameter("callend"))) {
-
-            if (StringUtils.isNotBlank(request.getParameter("callbegin"))) {
-                try {
-
-                    rangeQuery = QueryBuilders.rangeQuery("calltime").from(MainUtils.dateFormate.parse(request.getParameter("callbegin")).getTime());
-                } catch (ParseException e) {
-
-                    e.printStackTrace();
-                }
-            }
-            if (StringUtils.isNotBlank(request.getParameter("callend"))) {
-
-                try {
-
-                    if (rangeQuery == null) {
-                        rangeQuery = QueryBuilders.rangeQuery("calltime").to(MainUtils.dateFormate.parse(request.getParameter("callend")).getTime());
-                    } else {
-                        rangeQuery.to(MainUtils.dateFormate.parse(request.getParameter("callend")).getTime());
-                    }
-                } catch (ParseException e) {
-
-                    e.printStackTrace();
-                }
-
-            }
-            map.put("callbegin", request.getParameter("callbegin"));
-            map.put("callend", request.getParameter("callend"));
-        }
-        //预约时间区间查询
-        if (StringUtils.isNotBlank(request.getParameter("apbegin")) || StringUtils.isNotBlank(request.getParameter("apend"))) {
-
-            if (StringUtils.isNotBlank(request.getParameter("apbegin"))) {
-                try {
-
-                    rangeQuery = QueryBuilders.rangeQuery("aptime").from(MainUtils.dateFormate.parse(request.getParameter("apbegin")).getTime());
-                } catch (ParseException e) {
-
-                    e.printStackTrace();
-                }
-            }
-            if (StringUtils.isNotBlank(request.getParameter("apend"))) {
-
-                try {
-
-                    if (rangeQuery == null) {
-                        rangeQuery = QueryBuilders.rangeQuery("aptime").to(MainUtils.dateFormate.parse(request.getParameter("apend")).getTime());
-                    } else {
-                        rangeQuery.to(MainUtils.dateFormate.parse(request.getParameter("apend")).getTime());
-                    }
-                } catch (ParseException e) {
-
-                    e.printStackTrace();
-                }
-
-
-            }
-            map.put("apbegin", request.getParameter("apbegin"));
-            map.put("apend", request.getParameter("apend"));
-        }
-
-        if (rangeQuery != null) {
-            queryBuilder.must(rangeQuery);
-        }
-
-        //外呼任务id
-        if (StringUtils.isNotBlank(request.getParameter("taskid"))) {
-            queryBuilder.must(termQuery("taskid", request.getParameter("taskid")));
-            map.put("taskid", request.getParameter("taskid"));
-        }
-        //坐席
-        if (StringUtils.isNotBlank(request.getParameter("owneruser"))) {
-            queryBuilder.must(termQuery("owneruser", request.getParameter("owneruser")));
-            map.put("owneruser", request.getParameter("owneruser"));
-        }
-        //部门
-        if (StringUtils.isNotBlank(request.getParameter("ownerdept"))) {
-            queryBuilder.must(termQuery("ownerdept", request.getParameter("ownerdept")));
-            map.put("ownerdept", request.getParameter("ownerdept"));
-        }
-        //分配状态
-        if (StringUtils.isNotBlank(request.getParameter("status"))) {
-            queryBuilder.must(termQuery("status", request.getParameter("status")));
-            map.put("status", request.getParameter("status"));
-        }
-
-        return queryBuilder;
     }
 
     public User getIMUser(HttpServletRequest request, String userid, String nickname) {
