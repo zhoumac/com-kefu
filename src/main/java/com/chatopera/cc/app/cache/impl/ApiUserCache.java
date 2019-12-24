@@ -14,13 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.chatopera.cc.app.cache.redis.impl;
+package com.chatopera.cc.app.cache.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.chatopera.cc.app.cache.CacheBean;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -33,6 +37,8 @@ public class ApiUserCache  implements CacheBean {
 
 	@Autowired
 	private RedisTemplate redisTemplate;
+	@Autowired
+	private CacheManager cacheManager;
 
 	private HashOperations getHashOperations(){
 		HashOperations hashOperations = redisTemplate.opsForHash();
@@ -42,42 +48,56 @@ public class ApiUserCache  implements CacheBean {
 	private String cacheName ;
 
 	@Override
-	public void put(String key, Object value, String orgi) {
+	@CachePut(value="API_USER_CACHE", key="#key")
+	public Object put(String key, Object value, String orgi) {
+
 		getHashOperations().put(cacheName,key,value);
+		return value;
 	}
 
 	@Override
 	public void clear(String orgi) {
+
 		getHashOperations().delete(cacheName);
+		cacheManager.getCache(cacheName).clear();
 	}
 
 	@Override
+	@CacheEvict(value = "API_USER_CACHE",key="#key")
 	public Object delete(String key, String orgi) {
 		return 	getHashOperations().delete(cacheName,key);
 	}
 
 	@Override
+	@CacheEvict(value = "API_USER_CACHE",key="#key")
 	public Object delete(String key) {
-		return 	getHashOperations().delete(cacheName);
+		return 	getHashOperations().delete(cacheName,key);
 	}
 
 	@Override
-	public void update(String key, String orgi, Object object) {
+	@CachePut(value="API_USER_CACHE", key="#key")
+	public Object update(String key, String orgi, Object object) {
+
 		getHashOperations().put(cacheName,key,object);
+		return object;
 	}
 
 	@Override
+	@Cacheable(value = "API_USER_CACHE",key="#key")
 	public Object getCacheObject(String key, String orgi) {
+
 		return getHashOperations().get(cacheName,key);
 	}
 
 	@Override
+	@Cacheable(value = "API_USER_CACHE",key="#key")
 	public Object getCacheObject(String key) {
 		return getHashOperations().get(cacheName,key);
 
 	}
 
 	@Override
+	@Cacheable(value = "API_USER_CACHE",key="#key")
 	public Object getCacheObject(String key, String orgi, Object defaultValue) {
 		return getHashOperations().get(cacheName,key);
 
@@ -103,7 +123,6 @@ public class ApiUserCache  implements CacheBean {
 	public Object getCache() {
 
 		return getHashOperations().entries(cacheName);
-
 	}
 
 	@Override

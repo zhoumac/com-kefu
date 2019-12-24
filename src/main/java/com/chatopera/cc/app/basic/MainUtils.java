@@ -805,7 +805,7 @@ public class MainUtils {
 				}
 			}
 		}
-		return workintTime;
+		return true;
 	}
 
 	public static File processImage(final File destFile, final File imageFile) throws IOException {

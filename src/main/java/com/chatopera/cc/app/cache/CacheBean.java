@@ -25,7 +25,7 @@ public interface CacheBean {
 	/**
 	 * 
 	 */
-	public void put(String key , Object value , String orgi) ;
+	public Object put(String key , Object value , String orgi) ;
 	
 	/**
 	 * 
@@ -37,7 +37,7 @@ public interface CacheBean {
 
 	public Object delete(String key);
 
-	public void update(String key , String orgi , Object object) ;
+	public Object update(String key , String orgi , Object object) ;
 	
 	/**
 	 * 
@@ -77,7 +77,7 @@ public interface CacheBean {
 
 	public long getSize();
 
-	
 
-	
+
+
 }

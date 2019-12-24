@@ -83,7 +83,7 @@ public class SessionConfig implements java.io.Serializable{
 	private String oqrdetailinput ;	//外部快捷回复详情输入参数
 	private String oqrdetailoutput ;	//外部快捷回复详情输出参数
 	
-	private boolean hourcheck ;		//启用工作时间段检查
+	private boolean hourcheck  = false ;		//启用工作时间段检查
 	private String workinghours ;	//工作时间段，格式   9:00-12:00,13:30-15:30
 	private String notinwhmsg ;		//非工作时间段 访客咨询的提示消息
     

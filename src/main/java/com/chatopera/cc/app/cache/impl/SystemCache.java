@@ -14,12 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.chatopera.cc.app.cache.redis.impl;
+package com.chatopera.cc.app.cache.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.chatopera.cc.app.cache.CacheBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -28,11 +32,13 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-@Service("online_cache")
-public class OnlineCache  implements CacheBean {
+@Service("system_cache")
+public class SystemCache  implements CacheBean {
 
 	@Autowired
 	private RedisTemplate redisTemplate;
+	@Autowired
+	private CacheManager cacheManager;
 
 	private HashOperations getHashOperations(){
 		HashOperations hashOperations = redisTemplate.opsForHash();
@@ -42,42 +48,56 @@ public class OnlineCache  implements CacheBean {
 	private String cacheName ;
 
 	@Override
-	public void put(String key, Object value, String orgi) {
+	@CachePut(value="HAZLCAST_CLUSTER_AGENT_STATUS_CACHE", key="#key")
+	public Object put(String key, Object value, String orgi) {
+
 		getHashOperations().put(cacheName,key,value);
+		return value;
 	}
 
 	@Override
 	public void clear(String orgi) {
+
 		getHashOperations().delete(cacheName);
+		cacheManager.getCache(cacheName).clear();
 	}
 
 	@Override
+	@CacheEvict(value = "HAZLCAST_CLUSTER_AGENT_STATUS_CACHE",key="#key")
 	public Object delete(String key, String orgi) {
-		return 	getHashOperations().delete(cacheName,orgi);
+		return 	getHashOperations().delete(cacheName,key);
 	}
 
 	@Override
+	@CacheEvict(value = "HAZLCAST_CLUSTER_AGENT_STATUS_CACHE",key="#key")
 	public Object delete(String key) {
-		return 	getHashOperations().delete(cacheName);
+		return 	getHashOperations().delete(cacheName,key);
 	}
 
 	@Override
-	public void update(String key, String orgi, Object object) {
+	@CachePut(value="HAZLCAST_CLUSTER_AGENT_STATUS_CACHE", key="#key")
+	public Object update(String key, String orgi, Object object) {
+
 		getHashOperations().put(cacheName,key,object);
+		return object;
 	}
 
 	@Override
+	@Cacheable(value = "HAZLCAST_CLUSTER_AGENT_STATUS_CACHE",key="#key")
 	public Object getCacheObject(String key, String orgi) {
+
 		return getHashOperations().get(cacheName,key);
 	}
 
 	@Override
+	@Cacheable(value = "HAZLCAST_CLUSTER_AGENT_STATUS_CACHE",key="#key")
 	public Object getCacheObject(String key) {
 		return getHashOperations().get(cacheName,key);
 
 	}
 
 	@Override
+	@Cacheable(value = "HAZLCAST_CLUSTER_AGENT_STATUS_CACHE",key="#key")
 	public Object getCacheObject(String key, String orgi, Object defaultValue) {
 		return getHashOperations().get(cacheName,key);
 
@@ -103,7 +123,6 @@ public class OnlineCache  implements CacheBean {
 	public Object getCache() {
 
 		return getHashOperations().entries(cacheName);
-
 	}
 
 	@Override
@@ -115,8 +134,8 @@ public class OnlineCache  implements CacheBean {
 	@Override
 	public long getSize() {
 
-		Set set = (Set)redisTemplate.opsForHash().keys(cacheName);
+		Set map = (Set) redisTemplate.opsForHash().keys(cacheName);
 
-		return set.size();
+		return map.size();
 	}
 }

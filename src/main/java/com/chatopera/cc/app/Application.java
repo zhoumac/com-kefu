@@ -28,6 +28,7 @@ import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletCont
 import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
 import org.springframework.boot.web.servlet.ErrorPage;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -43,6 +44,7 @@ import com.chatopera.cc.util.mobile.MobileNumberUtils;
 @EnableJpaRepositories("com.chatopera.cc.app.persistence.repository")
 //@EnableElasticsearchRepositories("com.chatopera.cc.app.persistence.es")
 @EnableAsync
+@EnableCaching
 @EnableTransactionManagement
 public class Application {
 

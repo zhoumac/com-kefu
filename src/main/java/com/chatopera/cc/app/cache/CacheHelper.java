@@ -16,7 +16,7 @@
  */
 package com.chatopera.cc.app.cache;
 
-import com.chatopera.cc.app.cache.redis.impl.RedisInstanceCache;
+import com.chatopera.cc.app.cache.impl.InstanceCache;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -29,7 +29,7 @@ public class CacheHelper {
 	public static CacheHelper getInstance(){
 		return instance ;
 	}
-	private static CacheInstance cacheInstance = new RedisInstanceCache();
+	private static CacheInstance cacheInstance = new InstanceCache();
 	
 	public static CacheBean getAgentStatusCacheBean() {
 		return cacheInstance!=null ? cacheInstance.getAgentStatusCacheBean() : null;
