@@ -126,12 +126,12 @@ public class LogAop {
 
 		public static String[] strs = {"getStarttime","setStarttime","checkLoginValid","ping"};
 
-		public static List<String> resultList = List.of(strs);
+		public static List<String> resultList = Lists.newArrayList(strs);
 
 		public static int getLine(String classPage,String method) {
 
 
-			List<String> resultList = List.of(strs);
+			List<String> resultList = Lists.newArrayList(strs);
 			CtClass cc;
 			try {
 				cc = pool.getOrNull(classPage);

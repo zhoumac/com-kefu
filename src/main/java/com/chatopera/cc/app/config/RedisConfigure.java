@@ -19,14 +19,8 @@ package com.chatopera.cc.app.config;
 import com.chatopera.cc.app.schedule.WebIMAgentDispatcher;
 import com.chatopera.cc.app.schedule.WebIMOnlineUserDispatcher;
 import com.chatopera.cc.util.Constants;
-import org.redisson.Redisson;
-import org.redisson.api.RedissonClient;
-import org.redisson.config.Config;
-import org.redisson.spring.cache.RedissonSpringCacheManager;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
@@ -74,16 +68,6 @@ public class RedisConfigure {
 
 
 
-   /* *//**
-     *  选择redis作为默认缓存工具
-     * @param redisTemplate
-     * @return
-     *//*
-    @Bean
-    public CacheManager cacheManager(RedisTemplate redisTemplate) {
-        RedisCacheManager rcm = new RedisCacheManager(redisTemplate);
-        return rcm;
-    }*/
 
 
     @Bean

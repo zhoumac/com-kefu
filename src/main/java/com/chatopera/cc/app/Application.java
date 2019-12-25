@@ -1,4 +1,4 @@
-/*
+package com.chatopera.cc.app;/*
  * Copyright (C) 2017 优客服-多渠道客服系统
  * Modifications copyright (C) 2018 Chatopera Inc, <https://www.chatopera.com>
  *
@@ -14,9 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.chatopera.cc.app;
-
-import java.io.IOException;
 
 import javax.servlet.MultipartConfigElement;
 
@@ -36,9 +33,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.chatopera.cc.app.basic.MainContext;
 import com.chatopera.cc.app.config.StartedEventListener;
-import com.chatopera.cc.util.Constants;
-import com.chatopera.cc.util.SystemEnvHelper;
-import com.chatopera.cc.util.mobile.MobileNumberUtils;
 
 @SpringBootApplication
 @EnableJpaRepositories("com.chatopera.cc.app.persistence.repository")

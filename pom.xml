@@ -392,7 +392,37 @@
         </dependency>
 
     </dependencies>
-    <build>
+
+   <!-- <build>
+        <finalName>chat</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.chatopera.cc.app.Application</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+
+    </build>-->
+   <build>
         <finalName>chat</finalName>
         <plugins>
             <plugin>
@@ -437,10 +467,9 @@
                 <executions>
                     <execution>
                         <id>attach-source</id>
-                        <!-- 要绑定到的生命周期的阶段 在verify之后，install之前执行下面指定的goal -->
                         <phase>verify</phase>
                         <goals>
-                            <!-- 类似执行mvn source:jar -->
+
                             <goal>jar-no-fork</goal>
                         </goals>
                     </execution>
@@ -450,20 +479,20 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>9</source>
-                    <target>9</target>
+                    <source>8</source>
+                    <target>8</target>
                 </configuration>
             </plugin>
         </plugins>
-        <!-- 打包的时候放开 -->
-        <!--               <resources>-->
-        <!--                   <resource>-->
-        <!--                       <directory>src/main/resources</directory>-->
-        <!--                       <excludes>-->
-        <!--                           <exclude>*</exclude>-->
-        <!--                       </excludes>-->
-        <!--                       <filtering>true</filtering>-->
-        <!--                   </resource>-->
-        <!--               </resources>-->
+
+               <resources>
+                   <resource>
+                       <directory>src/main/resources</directory>
+                       <excludes>
+                           <exclude>*</exclude>
+                       </excludes>
+                       <filtering>true</filtering>
+                   </resource>
+               </resources>
     </build>
 </project>

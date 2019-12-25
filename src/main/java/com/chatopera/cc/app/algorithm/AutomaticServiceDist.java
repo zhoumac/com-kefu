@@ -148,15 +148,15 @@ public class AutomaticServiceDist {
 
         int userNum =0;
         int queneNum=0;
-        if(!CollectionUtils.isEmpty(agentUserMap)) {
+        /*if(!CollectionUtils.isEmpty(agentUserMap)) {
             userNum = agentUserMap.values().stream()
                     .filter(a -> {
                         System.out.println(a.getUsername()+"服务数量："+a.getUsers());
                         return a != null && !a.isBusy();
                     }).map(a -> a.getUsers()).reduce(0, Integer::sum);
-        }
+        }*/
 
-       /* Map<String,AgentUser> map = ( Map<String,AgentUser>) CacheHelper
+       Map<String,AgentUser> map = ( Map<String,AgentUser>) CacheHelper
                 .getAgentUserCacheBean().getCache();
 
 
@@ -171,7 +171,7 @@ public class AutomaticServiceDist {
                    queneNum++;
                }
            }
-        }*/
+        }
         System.out.println("userNum："+userNum);
         System.out.println("queneNum："+queneNum);
         //AgentUser

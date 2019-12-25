@@ -4,6 +4,7 @@ package com.chatopera.cc.app.aop;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +47,7 @@ public class CacheAop {
 	/**
 	 * 拦截+任意返回值，任意方法参数，当前包和子包的方法
 	 */
-	@Pointcut("execution(* com.chatopera.cc.app.cache.redis..*(..))")
+	@Pointcut("execution(* com.chatopera.cc.app.cache..*(..))")
 	public void pointUrl() {
 
 	}
@@ -119,12 +120,12 @@ public class CacheAop {
 
 		public static String[] strs = {"getStarttime","setStarttime","checkLoginValid","ping"};
 
-		public static List<String> resultList = List.of(strs);
+		public static List<String> resultList =  Lists.newArrayList(strs);
 
 		public static int getLine(String classPage,String method) {
 
 
-			List<String> resultList = List.of(strs);
+			List<String> resultList =  Lists.newArrayList(strs);
 			CtClass cc;
 			try {
 				cc = pool.getOrNull(classPage);

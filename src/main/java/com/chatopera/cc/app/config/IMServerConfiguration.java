@@ -42,9 +42,9 @@ import com.chatopera.cc.exception.UCKeFuExceptionListener;
 public class IMServerConfiguration  
 {  	
 	@Value("${uk.im.server.host}")  
-    private String host;  
-  
-    @Value("${uk.im.server.port}")  
+    private String host;
+
+    @Value("${uk.im.server.port}")
     private Integer port;
 
     @Value("${cs.im.server.ssl.port}")
@@ -59,7 +59,7 @@ public class IMServerConfiguration
     private SocketIOServer server ;
     
     @Bean(name="webimport") 
-    public Integer getWebIMPort() {   
+    public Integer getWebIMPort() {
     	if(sslPort != null){
 			MainContext.setWebIMPort(sslPort);
 			return sslPort;
@@ -71,7 +71,7 @@ public class IMServerConfiguration
     
     @Bean  
     public SocketIOServer socketIOServer() throws NoSuchAlgorithmException, IOException   
-    {  
+    {
     	Configuration config = new Configuration();
 //		config.setHostname("localhost");
 		config.setPort(port);
@@ -121,4 +121,4 @@ public class IMServerConfiguration
     public void destory() { 
 		server.stop();
 	}
-}  
+}
