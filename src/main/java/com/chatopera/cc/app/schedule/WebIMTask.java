@@ -91,6 +91,7 @@ public class WebIMTask {
                         if (agentUser != null) {
                             AgentStatus agentStatus = (AgentStatus) CacheHelper.getAgentStatusCacheBean().getCacheObject(agentUser.getAgentno(), task.getOrgi());
                             if (agentStatus != null && task.getWarningtime() != null && MainUtils.getLastTime(sessionConfig.getRetimeout()).after(task.getWarningtime())) {    //再次超时未回复
+                                System.out.println("设置了再次超时 断开");
                                 /**
                                  * 设置了再次超时 断开
                                  */

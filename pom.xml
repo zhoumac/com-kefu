@@ -351,26 +351,13 @@
             <artifactId>httpclient</artifactId>
             <version>4.3.6</version>
         </dependency>
-        <!--        <dependency>-->
-        <!--            <groupId>org.apache.httpcomponents</groupId>-->
-        <!--            <artifactId>httpasyncclient</artifactId>-->
-        <!--            <version>4.0.2</version>-->
-        <!--        </dependency>-->
-        <!--        <dependency>-->
-        <!--            <groupId>org.apache.httpcomponents</groupId>-->
-        <!--            <artifactId>httpmime</artifactId>-->
-        <!--            <version>4.3.6</version>-->
-        <!--        </dependency>-->
-        <!--        <dependency>-->
-        <!--            <groupId>com.mashape.unirest</groupId>-->
-        <!--            <artifactId>unirest-java</artifactId>-->
-        <!--            <version>1.4.9</version>-->
-        <!--        </dependency>-->
-        <!--        <dependency>-->
-        <!--            <groupId>com.chatopera.bot</groupId>-->
-        <!--            <artifactId>sdk</artifactId>-->
-        <!--            <version>1.0.2</version>-->
-        <!--        </dependency>-->
+
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+
 
         <!-- aop 依赖 -->
         <dependency>
@@ -378,22 +365,26 @@
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
 
-        <!-- 用于日志切面中，以 json 格式打印出入参（本来使用阿里的 FASTJSON, 但是对于文件上传的接口，打印参数会报错，换为 Gson） -->
-        <!--        <dependency>-->
-        <!--            <groupId>com.google.code.gson</groupId>-->
-        <!--            <artifactId>gson</artifactId>-->
-        <!--            <version>1.7.1</version>-->
-        <!--        </dependency>-->
-
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>1.2.60</version>
         </dependency>
 
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>3.4.0</version>
+        </dependency>
+
     </dependencies>
 
-   <!-- <build>
+    <build>
         <finalName>chat</finalName>
         <plugins>
             <plugin>
@@ -421,8 +412,8 @@
             </plugin>
         </plugins>
 
-    </build>-->
-   <build>
+    </build>
+   <!-- <build>
         <finalName>chat</finalName>
         <plugins>
             <plugin>
@@ -467,9 +458,10 @@
                 <executions>
                     <execution>
                         <id>attach-source</id>
+                        &lt;!&ndash; 要绑定到的生命周期的阶段 在verify之后，install之前执行下面指定的goal &ndash;&gt;
                         <phase>verify</phase>
                         <goals>
-
+                            &lt;!&ndash; 类似执行mvn source:jar &ndash;&gt;
                             <goal>jar-no-fork</goal>
                         </goals>
                     </execution>
@@ -485,14 +477,14 @@
             </plugin>
         </plugins>
 
-               <resources>
-                   <resource>
-                       <directory>src/main/resources</directory>
-                       <excludes>
-                           <exclude>*</exclude>
-                       </excludes>
-                       <filtering>true</filtering>
-                   </resource>
-               </resources>
-    </build>
+                       <resources>
+                           <resource>
+                               <directory>src/main/resources</directory>
+                               <excludes>
+                                   <exclude>*</exclude>
+                               </excludes>
+                               <filtering>true</filtering>
+                           </resource>
+                       </resources>
+    </build>-->
 </project>

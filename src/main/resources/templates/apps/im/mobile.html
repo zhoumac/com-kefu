@@ -287,6 +287,7 @@
     <#--    <div class="clearfix message  welcome">-->
     <#--        <span id="welcome-message">${(inviteData.dialog_message!'欢迎您来咨询！欢迎使用九州客服！如需帮助请联系 info@chatopera.com')?no_esc}</span>-->
     <#--    </div>-->
+
     <#if chatMessageList?? && chatMessageList.content??>
         <#list chatMessageList.content?reverse as chatMessage>
             <#if chatMessage.userid?? && userid?? && chatMessage.calltype?? && chatMessage.calltype = "呼入">
@@ -309,7 +310,7 @@
                     <div class="chat-left">
                         <img class="user-img"
                              src="<#if inviteData?? && inviteData.consult_dialog_headimg??>/res/image.html?id=${inviteData
-                             .consult_dialog_headimg?url}<#else>/images/user/${userRandom}.png</#if>"
+                             .consult_dialog_headimg?url}<#else>/images/user/${img}.png</#if>"
                              alt="">
                         <div class="chat-message">
                             <label class="user"><#if chatMessage?? && chatMessage.chatype?? && chatMessage.chatype == 'aireply'>${inviteData.ainame!'小松'}<#else>${chatMessage.username!''}</#if></label>
@@ -454,7 +455,11 @@
             drawCanvasImage(data.attachmentid);
         }
         if (data.calltype == "呼入") {
-            output('<div class="chat-right"> <img class="user-img" src="/images/player/${playerRandom}.png" alt=""><div class="chat-message"><label class="time">' + data.createtime + '</label><label  class="user">' + data.nickName + '</label> </div><div class="chatting-right"><i class="arrow arrow${inviteData.consult_dialog_color!''}"></i><div class="chat-content theme${inviteData.consult_dialog_color!''}">' + chat + '</div></div>', "chat-block");
+            var img = "${img}";
+            if(img==""||img==null){
+                img ="/images/player/${playerRandom}.png"
+            }
+            output('<div class="chat-right"> <img class="user-img" src='+img+' alt=""><div class="chat-message"><label class="time">' + data.createtime + '</label><label  class="user">' + data.nickName + '</label> </div><div class="chatting-right"><i class="arrow arrow${inviteData.consult_dialog_color!''}"></i><div class="chat-content theme${inviteData.consult_dialog_color!''}">' + chat + '</div></div>', "chat-block");
         } else if (data.calltype == "呼出") {
             //////////----->假如是用户点击充值咨询按钮出发的消息,则校验是否为img标签图片    by Wayne on 2019/9/19 19:00   start--->
             if (chat.indexOf("<img") == -1) {

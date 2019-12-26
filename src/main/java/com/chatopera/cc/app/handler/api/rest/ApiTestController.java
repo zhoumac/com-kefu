@@ -21,6 +21,8 @@ import com.chatopera.cc.app.aop.LogAop;
 import com.chatopera.cc.app.cache.impl.DemoCache;
 import com.chatopera.cc.app.interceptor.JpaInterceptor;
 import com.chatopera.cc.app.aop.model.UseMessage;
+import com.chatopera.cc.app.jwt.JwtUtil;
+import com.chatopera.cc.app.jwt.TPlayer;
 import com.chatopera.cc.util.Menu;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -52,12 +54,13 @@ public class ApiTestController {
 		return useMessage;
 	}
 
-	@GetMapping("getCache")
+	@GetMapping("getToken")
 	@ApiOperation("获取缓存")
 	@Menu(subtype = "token",access = true)
-	public Object getCache(@RequestParam  String key) {
-
-		return demoCache.findBook(key);
+	public Object getCache(@RequestParam  String name) {
+		TPlayer tPlayer = new TPlayer();
+		tPlayer.setNick(name);
+		return JwtUtil.createJWT(60*100*24,tPlayer);
 	}
 
 	@GetMapping("updateBook")

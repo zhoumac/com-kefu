@@ -25,6 +25,8 @@ import com.chatopera.cc.app.cache.CacheHelper;
 import com.chatopera.cc.app.handler.Handler;
 import com.chatopera.cc.app.im.message.ChatMessage;
 import com.chatopera.cc.app.im.util.RichMediaUtils;
+import com.chatopera.cc.app.jwt.JwtUtil;
+import com.chatopera.cc.app.jwt.TPlayer;
 import com.chatopera.cc.app.model.AgentReport;
 import com.chatopera.cc.app.model.AgentServiceSatis;
 import com.chatopera.cc.app.model.AgentStatus;
@@ -110,11 +112,7 @@ import java.io.PrintWriter;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping("/im")
@@ -450,10 +448,11 @@ public class IMController extends Handler {
 	                          @Valid String url, @Valid String mobile, @Valid String phone, @Valid String ai, @Valid String client,
 	                          @Valid String type, @Valid String appid, @Valid String userid, @Valid String sessionid, @Valid String skill,
 	                          @Valid String agent, @Valid Contacts contacts, @Valid String product, @Valid String description,
-	                          @Valid String imgurl, @Valid String pid, @Valid String purl, @Valid String userPin, @Valid String chatType) throws Exception {
+	                          @Valid String imgurl, @Valid String pid, @Valid String purl, @Valid String userPin, @Valid String chatType,  @Valid String token) throws Exception {
 
 		String ip = ExtUtils.getIpAddress(request);
 		String nickname = null;
+		String img = "";
 		ModelAndView view = request(super.createRequestPageTempletResponse("/apps/im/index"));
 		//////////----->传递askType,确认是否为支付相关咨询    by Wayne on 2019/9/10 13:38   start--->
 		request.setAttribute("chatType", chatType);
@@ -471,7 +470,18 @@ public class IMController extends Handler {
 				// 若前段传递pin过来,则刷新之前的游客用户名
 				userService.refreshNickName(userid, nickname);
 			} else {
-				nickname = "游客:" + ip;
+				if(StringUtil.isNotEmpty(token)){
+					System.out.println("设置vip充值玩家的昵称");
+					TPlayer tPlayer = JwtUtil.parseJWT(token);
+					if(null!=tPlayer){
+						nickname = tPlayer.getNick();
+						img=tPlayer.getHead();
+						view.addObject("img", img);
+					}
+				}else{
+					nickname = "游客:" + ip;
+				}
+
 			}
 
 			// 获取玩家ID和登录类型 sin 2019-08-17 18:39:43 end
@@ -491,6 +501,7 @@ public class IMController extends Handler {
 			map.addAttribute("userid", userid);
 			map.addAttribute("schema", request.getScheme());
 			map.addAttribute("sessionid", sessionid);
+
 
 			view.addObject("product", product);
 			view.addObject("description", description);
@@ -694,6 +705,7 @@ public class IMController extends Handler {
 		//////////<-----支付相关    by Wayne on 2019/9/4 13:14    <---end
 		view.addObject("userRandom", CommonUtil.string2NumberByMod(orgi, 5));
 		view.addObject("playerRandom", CommonUtil.string2NumberByMod(nickname, 6));
+		view.addObject("img", img);
 		return view;
 	}
 
@@ -855,7 +867,7 @@ public class IMController extends Handler {
 	                         @Valid String traceid, @Valid String aiid, @Valid String exchange, @Valid String title, @Valid String url,
 	                         @Valid String skill, @Valid String id, @Valid String userid, @Valid String agent, @Valid String name,
 	                         @Valid String email, @Valid String phone, @Valid String ai, @Valid String kefuPin, @Valid String product,
-	                         @Valid String description, @Valid String imgurl, @Valid String pid, @Valid String purl, @Valid String userPin, @Valid String chatType)
+	                         @Valid String description, @Valid String imgurl, @Valid String pid, @Valid String purl, @Valid String userPin, @Valid String chatType,@Valid String token)
 			throws Exception {
 		ModelAndView view = request(super.createRequestPageTempletResponse("/apps/im/text"));
 
@@ -929,6 +941,9 @@ public class IMController extends Handler {
 				view.addObject("aiid", aiid);
 			} else if (StringUtils.isNotBlank(invite.getAiid())) {
 				view.addObject("aiid", invite.getAiid());
+			}
+			if (StringUtils.isNotBlank(token)) {
+				view.addObject("token", token);
 			}
 		}
 
